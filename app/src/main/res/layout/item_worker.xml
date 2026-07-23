@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layoutDirection="rtl"
+    android:layout_marginBottom="10dp"
+    app:cardBackgroundColor="#132B1E"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Row 1: Circle + Status (left) + Name (right) -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Status indicator left side -->
+            <LinearLayout
+                android:id="@+id/layoutStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true">
+
+                <View
+                    android:id="@+id/viewStatusIndicator"
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:background="@drawable/bg_indicator"
+                    android:backgroundTint="#CFFF04"/>
+
+                <TextView
+                    android:id="@+id/tvWorkerStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="نشط"
+                    android:textColor="#CFFF04"
+                    android:textSize="12sp"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
+
+            <!-- Name right side -->
+            <TextView
+                android:id="@+id/tvWorkerName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="اسم العامل"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+
+        <!-- Worker Code Row (NEW) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical|end"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_pill"
+            android:backgroundTint="#0D2117"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp">
+
+            <ImageButton
+                android:id="@+id/btnCopyWorkerCode"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_copy"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="نسخ الرمز"
+                app:tint="#6B9E7A"
+                android:layout_marginStart="8dp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="رمز الدخول:"
+                android:textColor="#6B9E7A"
+                android:textSize="12sp"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/tvWorkerCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="W-0000"
+                android:textColor="#CFFF04"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:fontFamily="monospace"/>
+        </LinearLayout>
+
+        <!-- Bottom actions row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical|end"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                android:id="@+id/btnDeleteWorker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="حذف"
+                android:textColor="#FF4444"
+                android:textSize="13sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="8dp"
+                android:layout_marginEnd="16dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnToggleWorker"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="تعطيل"
+                android:textSize="12sp"
+                android:paddingHorizontal="12dp"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                app:strokeColor="#CFFF04"
+                android:textColor="#CFFF04"
+                app:cornerRadius="8dp"/>
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0D2117"
+    android:layoutDirection="rtl">
+
+    <!-- ============================== -->
+    <!-- OWNER LAYOUT                    -->
+    <!-- ============================== -->
+    <LinearLayout
+        android:id="@+id/layoutOwner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <!-- Top Section — floating on green -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingTop="48dp"
+            android:paddingBottom="8dp">
+
+            <!-- Greeting right side -->
+            <LinearLayout
+                android:id="@+id/layoutGreeting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true">
+
+                <TextView
+                    android:id="@+id/tvWelcome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="مرحباً"
+                    android:textColor="#6B9E7A"
+                    android:textSize="13sp"/>
+
+                <TextView
+                    android:id="@+id/tvOwnerName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="#FFFFFF"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="2dp"/>
+            </LinearLayout>
+
+            <!-- Icons left side -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true">
+
+                <ImageButton
+                    android:id="@+id/btnNotifications"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_bell"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="إشعارات"
+                    app:tint="#6B9E7A"
+                    android:visibility="gone"/>
+
+                <ImageButton
+                    android:id="@+id/btnManageWorkers"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_people"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="إدارة الموظفين"
+                    app:tint="#6B9E7A"
+                    android:visibility="gone"/>
+
+                <ImageButton
+                    android:id="@+id/btnImport"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_cloud_download"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="استيراد نسخة احتياطية"
+                    app:tint="#6B9E7A"
+                    android:visibility="gone"/>
+
+                <ImageButton
+                    android:id="@+id/btnLogoutOwner"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_power"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="خروج"
+                    app:tint="#6B9E7A"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <!-- Search Bar -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="16dp"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            app:boxStrokeColor="#1A3525"
+            app:hintTextColor="#6B9E7A"
+            app:boxBackgroundColor="@android:color/transparent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="ابحث عن زبون..."
+                android:inputType="textPersonName"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:padding="12dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Stat Pills + Alerts + Debt List in scrollable content -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- Two stat pills -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="24dp"
+                android:layout_marginBottom="16dp">
+
+                <!-- Active count pill -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_pill"
+                    android:backgroundTint="#132B1E"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="12dp"
+                    android:layout_marginEnd="6dp">
+
+                    <TextView
+                        android:id="@+id/tvActiveCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="#CFFF04"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:lineSpacingExtra="0sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="حسابات نشطة"
+                        android:textColor="#6B9E7A"
+                        android:textSize="11sp"
+                        android:layout_marginTop="-4dp"/>
+                </LinearLayout>
+
+                <!-- Pending count pill -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_pill"
+                    android:backgroundTint="#132B1E"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="12dp"
+                    android:layout_marginStart="6dp">
+
+                    <TextView
+                        android:id="@+id/tvPendingCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="#CFFF04"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:lineSpacingExtra="0sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="طلبات معلقة"
+                        android:textColor="#6B9E7A"
+                        android:textSize="11sp"
+                        android:layout_marginTop="-4dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Urgent alerts strip (only visible when locked debts exist) -->
+            <HorizontalScrollView
+                android:id="@+id/horizontalScrollAlerts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/layoutAlerts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"/>
+            </HorizontalScrollView>
+
+            <!-- Debt List -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvDebts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:paddingBottom="88dp"
+                android:clipToPadding="false"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- ============================== -->
+    <!-- WORKER LAYOUT                   -->
+    <!-- ============================== -->
+    <LinearLayout
+        android:id="@+id/layoutWorker"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <!-- Top Section -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="32dp"
+            android:paddingEnd="32dp"
+            android:paddingTop="48dp"
+            android:paddingBottom="8dp">
+
+            <LinearLayout
+                android:id="@+id/layoutWorkerGreeting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true">
+
+                <TextView
+                    android:id="@+id/tvWelcomeWorker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="مرحباً"
+                    android:textColor="#6B9E7A"
+                    android:textSize="13sp"/>
+
+                <TextView
+                    android:id="@+id/tvWorkerName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="#FFFFFF"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="2dp"/>
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/btnLogoutWorker"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_power"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="خروج"
+                app:tint="#6B9E7A"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+
+        <!-- Search Bar -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="16dp"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            app:boxStrokeColor="#1A3525"
+            app:hintTextColor="#6B9E7A"
+            app:boxBackgroundColor="@android:color/transparent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etWorkerSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="ابحث عن زبون..."
+                android:inputType="textPersonName"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:padding="12dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Add Debt Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnWorkerAddDebt"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="16dp"
+            android:text="تسجيل دين جديد"
+            android:backgroundTint="#CFFF04"
+            android:textColor="#0D2117"
+            android:textSize="18sp"
+            app:cornerRadius="16dp"/>
+
+        <!-- Debt List -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvWorkerSearchResults"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="12dp"
+            android:clipToPadding="false"/>
+
+        <!-- Pending link -->
+        <TextView
+            android:id="@+id/tvWorkerPendingLink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="طلباتي المعلقة"
+            android:textColor="#CFFF04"
+            android:textSize="14sp"
+            android:padding="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_gravity="center_horizontal"/>
+
+    </LinearLayout>
+
+    <!-- Pending requests pill (only when pending > 0) -->
+    <TextView
+        android:id="@+id/tvPendingPill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/bg_pending_pill"
+        android:backgroundTint="#CFFF04"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="12dp"
+        android:text="0 طلبات معلقة — اضغط للمراجعة"
+        android:textColor="#0D2117"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true"/>
+
+    <!-- FAB for adding debt -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnAddDebt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="32dp"
+        android:src="@drawable/ic_add"
+        android:contentDescription="إضافة دين"
+        android:visibility="gone"
+        app:backgroundTint="#CFFF04"
+        app:tint="#0D2117"/>
+
+</FrameLayout>

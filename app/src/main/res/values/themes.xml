@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.SajilAlDuyun" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">#CFFF04</item>
+        <item name="colorOnPrimary">#0D2117</item>
+        <item name="colorSurface">#132B1E</item>
+        <item name="colorOnSurface">#FFFFFF</item>
+        <item name="android:colorBackground">#0D2117</item>
+        <item name="android:windowBackground">#0D2117</item>
+        <item name="colorSecondary">#CFFF04</item>
+        <item name="colorError">#FF4444</item>
+    </style>
+</resources>

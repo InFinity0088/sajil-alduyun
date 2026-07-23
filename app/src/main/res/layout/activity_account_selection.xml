@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0D2117"
+    android:layoutDirection="rtl"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="اختر الحساب"
+        android:textColor="#FFFFFF"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="أنقر على حسابك للمتابعة"
+        android:textColor="#6B9E7A"
+        android:textSize="14sp"
+        android:layout_marginBottom="32dp"/>
+
+    <!-- Accounts List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvAccounts"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <!-- No Accounts Message -->
+    <TextView
+        android:id="@+id/tvNoAccounts"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="لا توجد حسابات نشطة"
+        android:textColor="#808080"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:visibility="gone"/>
+
+    <!-- Fingerprint Prompt -->
+    <LinearLayout
+        android:id="@+id/layoutFingerprintPrompt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#1A3525"
+        android:gravity="center"
+        android:padding="16dp"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="جاري انتظار بصمة إصبعك..."
+            android:textColor="#CFFF04"
+            android:textSize="14sp"
+            android:gravity="center"/>
+    </LinearLayout>
+</LinearLayout>
