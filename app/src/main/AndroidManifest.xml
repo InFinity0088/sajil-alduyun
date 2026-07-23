@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="سجل الديون"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.SajilAlDuyun">
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
+
+        <activity android:name=".MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".DashboardActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".AddDebtActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".PendingRequestsActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".SetupActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".LicenseExpiredActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".DebtDetailActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".AccountSelectionActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".PasswordLoginActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".ForgotPasswordActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".WorkerManagementActivity"
+            android:windowSoftInputMode="adjustResize"/>
+
+    </application>
+
+</manifest>

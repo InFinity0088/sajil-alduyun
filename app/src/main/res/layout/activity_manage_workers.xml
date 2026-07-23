@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0D2117"
+    android:layoutDirection="rtl"
+    android:orientation="vertical">
+
+    <!-- Top Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="24dp"
+        android:paddingTop="48dp"
+        android:gravity="center_vertical">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_arrow_back"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="رجوع"
+            app:tint="#FFFFFF"
+            android:layout_marginEnd="12dp"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="إدارة الموظفين"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tvWorkerCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="6dp"
+            android:background="@drawable/bg_pill"
+            android:backgroundTint="#1A3525"
+            android:text="العمال: ..."
+            android:textColor="#6B9E7A"
+            android:textSize="12sp"/>
+    </LinearLayout>
+
+    <!-- Content area: empty state or list -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <!-- Empty state -->
+        <TextView
+            android:id="@+id/tvEmptyWorkers"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="لا يوجد عمال مسجلون.\nاضغط + لإضافة عامل جديد."
+            android:textColor="#6B9E7A"
+            android:textSize="16sp"
+            android:lineSpacingMultiplier="1.5"
+            android:visibility="gone"/>
+
+        <!-- Workers list -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerWorkers"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="88dp"
+            android:clipToPadding="false"/>
+
+        <!-- FAB -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabAddWorker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="20dp"
+            android:src="@drawable/ic_add_person"
+            android:contentDescription="إضافة عامل"
+            app:backgroundTint="#CFFF04"
+            app:tint="#0D2117"/>
+
+    </FrameLayout>
+
+</LinearLayout>

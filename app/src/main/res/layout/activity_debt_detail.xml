@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0D2117"
+    android:layoutDirection="rtl">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="32dp">
+
+        <!-- Back arrow + Customer name -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_arrow_back"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="رجوع"
+                app:tint="#FFFFFF"
+                android:layout_marginEnd="12dp"/>
+
+            <TextView
+                android:id="@+id/tvDetailCustomerName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textColor="#FFFFFF"
+                android:textSize="26sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <!-- Hero Amount Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="المبلغ الحالي"
+            android:textColor="#6B9E7A"
+            android:textSize="13sp"
+            android:layout_marginTop="40dp"/>
+
+        <TextView
+            android:id="@+id/tvDetailAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#CFFF04"
+            android:textSize="56sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Info row: Plan | Status | Created Date -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvDetailPlan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#6B9E7A"
+                android:textSize="13sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" — "
+                android:textColor="#6B9E7A"
+                android:textSize="13sp"
+                android:layout_marginHorizontal="8dp"/>
+
+            <TextView
+                android:id="@+id/tvDetailStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="12sp"
+                android:background="@drawable/bg_pill"
+                android:backgroundTint="#132B1E"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" — "
+                android:textColor="#6B9E7A"
+                android:textSize="13sp"
+                android:layout_marginHorizontal="8dp"/>
+
+            <TextView
+                android:id="@+id/tvDetailCreatedAt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#6B9E7A"
+                android:textSize="12sp"
+                android:maxLines="1"
+                android:singleLine="true"/>
+        </LinearLayout>
+
+        <!-- Limit Progress section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:id="@+id/tvLimitLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#6B9E7A"
+                android:textSize="12sp"
+                android:layout_marginBottom="6dp"/>
+
+            <ProgressBar
+                android:id="@+id/progressLimit"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:progressTint="#CFFF04"
+                android:progressBackgroundTint="#1A3525"
+                android:max="100"/>
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#1A3525"
+            android:layout_marginVertical="32dp"/>
+
+        <!-- Locked Message (worker only) -->
+        <TextView
+            android:id="@+id/tvLockedMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="هذا الحساب مقفل، راجع المدير"
+            android:textColor="#FF4444"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:padding="16dp"
+            android:visibility="gone"/>
+
+        <!-- Owner or non-locked worker actions -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEdit"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="تعديل"
+            android:textSize="15sp"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            app:strokeColor="#CFFF04"
+            android:textColor="#CFFF04"
+            app:cornerRadius="12dp"
+            android:visibility="gone"/>
+
+        <!-- Edit Actions -->
+        <LinearLayout
+            android:id="@+id/layoutEditActions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_marginTop="16dp">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="#1A3525"
+                app:hintTextColor="#6B9E7A"
+                app:boxBackgroundColor="@android:color/transparent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etActionAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="المبلغ (د.ع)"
+                    android:inputType="numberDecimal"
+                    android:textColor="#CFFF04"
+                    android:textSize="24sp"
+                    android:padding="12dp"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Error banner -->
+            <LinearLayout
+                android:id="@+id/layoutEditError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#2E0000"
+                android:gravity="center"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvEditError"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="#FF4444"
+                    android:textSize="13sp"/>
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnIncrease"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:text="زيادة المبلغ"
+                android:backgroundTint="#CFFF04"
+                android:textColor="#0D2117"
+                android:textSize="15sp"
+                android:layout_marginBottom="12dp"
+                app:cornerRadius="12dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDecrease"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:text="تخفيض المبلغ"
+                android:backgroundTint="#FF8C00"
+                android:textColor="#0D2117"
+                android:textSize="15sp"
+                android:layout_marginBottom="12dp"
+                app:cornerRadius="12dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnMarkPaid"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:text="تم التسديد"
+                android:textSize="15sp"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                app:strokeColor="#CFFF04"
+                android:textColor="#CFFF04"
+                android:backgroundTint="#132B1E"
+                app:cornerRadius="12dp"/>
+        </LinearLayout>
+
+        <!-- Delete (owner only, text link) -->
+        <TextView
+            android:id="@+id/btnDeleteDebt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="حذف هذا الدين"
+            android:textColor="#FF4444"
+            android:textSize="13sp"
+            android:gravity="center"
+            android:padding="16dp"
+            android:visibility="gone"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <!-- History Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="#132B1E"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="سجل التعديلات"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp"/>
+
+                <LinearLayout
+                    android:id="@+id/layoutHistoryContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+</ScrollView>

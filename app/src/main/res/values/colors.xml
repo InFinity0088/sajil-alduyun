@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Dark fintech palette -->
+    <color name="background">#0D2117</color>
+    <color name="surface">#132B1E</color>
+    <color name="primary">#CFFF04</color>
+    <color name="primary_on">#0D2117</color>
+
+    <!-- Text -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#6B9E7A</color>
+
+    <!-- Debt status -->
+    <color name="status_active">#CFFF04</color>
+    <color name="status_pending">#FF8C00</color>
+    <color name="status_locked">#FF4444</color>
+</resources>

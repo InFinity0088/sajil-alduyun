@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="192dp"
+    android:height="192dp"
+    android:viewportWidth="192"
+    android:viewportHeight="192">
+
+    <!-- Background circle -->
+    <path
+        android:fillColor="#0D2117"
+        android:pathData="M96,0 C149.03,0 192,42.97 192,96 C192,149.03 149.03,192 96,192 C42.97,192 0,149.03 0,96 C0,42.97 42.97,0 96,0 Z"/>
+
+    <!-- Outer ring accent -->
+    <path
+        android:fillColor="#CFFF04"
+        android:pathData="M96,8 C145.24,8 184,46.76 184,96 C184,145.24 145.24,184 96,184 C46.76,184 8,145.24 8,96 C8,46.76 46.76,8 96,8 Z"
+        android:strokeColor="#CFFF04"
+        android:strokeWidth="0"/>
+
+    <!-- Inner dark background -->
+    <path
+        android:fillColor="#0D2117"
+        android:pathData="M96,16 C140.18,16 176,51.82 176,96 C176,140.18 140.18,176 96,176 C51.82,176 16,140.18 16,96 C16,51.82 51.82,16 96,16 Z"/>
+
+    <!-- Ledger/Book pages - left side -->
+    <path
+        android:fillColor="#6B9E7A"
+        android:pathData="M48,60 L68,60 L68,75 L48,75 Z"/>
+    <path
+        android:fillColor="#5A8A6A"
+        android:pathData="M48,78 L68,78 L68,93 L48,93 Z"/>
+    <path
+        android:fillColor="#497A5A"
+        android:pathData="M48,96 L68,96 L68,111 L48,111 Z"/>
+    <path
+        android:fillColor="#6B9E7A"
+        android:pathData="M48,114 L68,114 L68,129 L48,129 Z"/>
+
+    <!-- Ledger spine (center divider) -->
+    <path
+        android:fillColor="#CFFF04"
+        android:pathData="M70,55 L72,55 L72,135 L70,135 Z"/>
+
+    <!-- Ledger/Book pages - right side -->
+    <path
+        android:fillColor="#6B9E7A"
+        android:pathData="M124,60 L144,60 L144,75 L124,75 Z"/>
+    <path
+        android:fillColor="#5A8A6A"
+        android:pathData="M124,78 L144,78 L144,93 L124,93 Z"/>
+    <path
+        android:fillColor="#497A5A"
+        android:pathData="M124,96 L144,96 L144,111 L124,111 Z"/>
+    <path
+        android:fillColor="#6B9E7A"
+        android:pathData="M124,114 L144,114 L144,129 L124,129 Z"/>
+
+    <!-- Horizontal line accent (debt tracking lines) -->
+    <path
+        android:fillColor="#CFFF04"
+        android:pathData="M52,66 L64,66 L64,67 L52,67 Z"/>
+    <path
+        android:fillColor="#CFFF04"
+        android:pathData="M52,84 L64,84 L64,85 L52,85 Z"/>
+    <path
+        android:fillColor="#CFFF04"
+        android:pathData="M52,102 L64,102 L64,103 L52,103 Z"/>
+    <path
+        android:fillColor="#CFFF04"
+        android:pathData="M52,120 L64,120 L64,121 L52,121 Z"/>
+
+    <!-- Right side horizontal lines -->
+    <path
+        android:fillColor="#CFFF04"
+        android:pathData="M128,66 L140,66 L140,67 L128,67 Z"/>
+    <path
+        android:fillColor="#CFFF04"
+        android:pathData="M128,84 L140,84 L140,85 L128,85 Z"/>
+    <path
+        android:fillColor="#CFFF04"
+        android:pathData="M128,102 L140,102 L140,103 L128,103 Z"/>
+    <path
+        android:fillColor="#CFFF04"
+        android:pathData="M128,120 L140,120 L140,121 L128,121 Z"/>
+
+    <!-- Center checkmark/verification mark (representing approved debts) -->
+    <path
+        android:fillColor="#CFFF04"
+        android:pathData="M74,100 L84,110 L110,84"
+        android:strokeColor="#CFFF04"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillType="evenOdd"/>
+
+</vector>
