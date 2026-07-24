@@ -4,11 +4,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.Date
 
-enum class PlanType {
-    THIRTY_DAY,
-    UNLIMITED
-}
-
 enum class DebtStatus {
     PENDING,
     APPROVED,
@@ -23,34 +18,11 @@ data class CustomerDebt(
     val id: String,
     val customerName: String,
     var amount: Double,
-    val planType: PlanType,
-    val maxLimit: Double,
+    val planId: Long,                // FK to plans table (customizable plan)
+    val maxLimit: Double,            // Snapshot of plan's maxAmount at creation
+    val planDurationDays: Int,       // Snapshot of plan's durationDays at creation (0 = no time limit)
     var status: DebtStatus,
     val createdByUserId: String,
     val createdAt: Date = Date(),
     var lastUpdatedAt: Date = Date()
 )
-
-object DebtFactory {
-    fun create(
-        id: String,
-        customerName: String,
-        amount: Double,
-        planType: PlanType,
-        createdByUserId: String
-    ): CustomerDebt {
-        val maxLimit = when (planType) {
-            PlanType.THIRTY_DAY -> 100_000.0
-            PlanType.UNLIMITED  -> 25_000.0
-        }
-        return CustomerDebt(
-            id = id,
-            customerName = customerName,
-            amount = amount,
-            planType = planType,
-            maxLimit = maxLimit,
-            status = DebtStatus.PENDING,
-            createdByUserId = createdByUserId
-        )
-    }
-}

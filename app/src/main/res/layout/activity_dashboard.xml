@@ -83,6 +83,16 @@
                     android:visibility="gone"/>
 
                 <ImageButton
+                    android:id="@+id/btnManagePlans"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_more_vert"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="إدارة الخطط"
+                    app:tint="#6B9E7A"
+                    android:visibility="gone"/>
+
+                <ImageButton
                     android:id="@+id/btnImport"
                     android:layout_width="40dp"
                     android:layout_height="40dp"

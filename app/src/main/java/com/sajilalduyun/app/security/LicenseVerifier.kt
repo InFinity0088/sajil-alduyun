@@ -10,7 +10,11 @@ import java.security.spec.X509EncodedKeySpec
  *
  * The app embeds only the PUBLIC key — valid codes cannot be guessed from
  * source code. Generate new codes offline with the private key via the
- * accompanying Python script (`_tasks/license_tools/generate_code.py`).
+ * accompanying Python scripts.
+ *
+ * Renewal codes embed the duration in the signed purpose string:
+ *   "SAJIL-LICENSE-RENEW:<duration_ms>"
+ * This lets the same app accept both 3-day and 6-month codes.
  */
 object LicenseVerifier {
 
@@ -55,7 +59,7 @@ object LicenseVerifier {
      * over [purpose] (the data that was signed).
      *
      * @param purpose The exact byte-array that was signed during code generation,
-     *                e.g. "SAJIL-OWNER-SETUP" or "SAJIL-LICENSE-RENEW".
+     *                e.g. "SAJIL-OWNER-SETUP" or "SAJIL-LICENSE-RENEW:259200000".
      * @param code    The Base64-encoded signature to verify.
      * @return true if the signature is valid (proving the code was generated
      *         with the corresponding private key).
@@ -72,4 +76,156 @@ object LicenseVerifier {
             false
         }
     }
+
+    /**
+     * Result of verifying a renewal code that encodes its own duration.
+     */
+    data class RenewalResult(
+        val valid: Boolean,
+        val durationMs: Long
+    )
+
+    /**
+     * Known durations that renewal and setup codes can encode.
+     * The signed purpose is "SAJIL-LICENSE-RENEW:<duration_ms>" or
+     * "SAJIL-OWNER-SETUP:<duration_ms>".
+     *
+     * Long.MAX_VALUE represents an unlimited (non-expiring) license.
+     */
+    private val KNOWN_DURATIONS = listOf(
+        3L * 24 * 60 * 60 * 1000L,         // 3 days
+        6L * 30 * 24 * 60 * 60 * 1000L,    // ~6 months
+        Long.MAX_VALUE                      // Unlimited
+    )
+
+    /**
+     * Result of verifying a renewal code that encodes its own duration.
+     */
+    // Already defined above: data class RenewalResult(valid, durationMs)
+
+    /**
+     * Result of verifying a setup code that encodes its own duration.
+     */
+    data class SetupResult(
+        val valid: Boolean,
+        val durationMs: Long
+    )
+
+    /**
+     * Result of verifying a transfer code.
+     * @property oldDeviceId optionally embedded in the transfer code for revocation.
+     */
+    data class TransferResult(
+        val valid: Boolean,
+        val durationMs: Long,
+        val oldDeviceId: String? = null
+    )
+
+    /**
+     * Verifies a transfer code — used when moving a license to a new phone.
+     *
+     * Purpose formats:
+     *   "SAJIL-LICENSE-TRANSFER:<duration>:<newDeviceId>"            (simple transfer)
+     *   "SAJIL-LICENSE-TRANSFER:<duration>:<newDeviceId>:<oldId>"    (transfer + auto-revoke)
+     */
+    fun verifyTransfer(code: String, newDeviceId: String): TransferResult {
+        for (duration in KNOWN_DURATIONS) {
+            val purpose = "SAJIL-LICENSE-TRANSFER:$duration:$newDeviceId"
+            if (verify(code, purpose)) {
+                return TransferResult(true, duration)
+            }
+        }
+        return TransferResult(false, 0L)
+    }
+
+    /**
+     * Verifies a revoke code that invalidates a license on a specific device.
+     * Purpose: "SAJIL-LICENSE-REVOKE:<deviceId>"
+     */
+    fun verifyRevoke(code: String, deviceId: String): Boolean {
+        val purpose = "SAJIL-LICENSE-REVOKE:$deviceId"
+        return verify(code, purpose)
+    }
+
+    /**
+     * Verifies a renewal code by trying each known duration.
+     *
+     * When [deviceId] is provided (non-null), also tries device-locked purposes
+     * first: "SAJIL-LICENSE-RENEW:<duration>:<deviceId>". This prevents a code
+     * generated with --device from working on any other phone.
+     *
+     * Falls back to non-device-specific purposes for backward compatibility
+     * with codes generated without --device.
+     */
+    fun verifyRenewal(code: String, deviceId: String? = null): RenewalResult {
+        // 1. Device-locked codes (highest priority)
+        if (deviceId != null) {
+            for (duration in KNOWN_DURATIONS) {
+                val purpose = "SAJIL-LICENSE-RENEW:$duration:$deviceId"
+                if (verify(code, purpose)) {
+                    return RenewalResult(true, duration)
+                }
+            }
+        }
+        // 2. Non-device-locked duration codes (backward compat)
+        for (duration in KNOWN_DURATIONS) {
+            val purpose = "SAJIL-LICENSE-RENEW:$duration"
+            if (verify(code, purpose)) {
+                return RenewalResult(true, duration)
+            }
+        }
+        return RenewalResult(false, 0L)
+    }
+
+    /**
+     * Verifies a setup (owner registration) code.
+     *
+     * When [deviceId] is provided, tries device-locked purposes first:
+     * "SAJIL-OWNER-SETUP:<duration>:<deviceId>". This locks the code
+     * to a specific phone — the same code is useless on any other device.
+     *
+     * Falls back to non-device-specific purposes, then to the bare
+     * "SAJIL-OWNER-SETUP" for full backward compatibility.
+     */
+    fun verifySetup(code: String, deviceId: String? = null): SetupResult {
+        // 1. Device-locked codes (highest priority — machine-locked license)
+        if (deviceId != null) {
+            for (duration in KNOWN_DURATIONS) {
+                val purpose = "SAJIL-OWNER-SETUP:$duration:$deviceId"
+                if (verify(code, purpose)) {
+                    return SetupResult(true, duration)
+                }
+            }
+        }
+        // 2. Non-device-locked duration codes (backward compat)
+        for (duration in KNOWN_DURATIONS) {
+            val purpose = "SAJIL-OWNER-SETUP:$duration"
+            if (verify(code, purpose)) {
+                return SetupResult(true, duration)
+            }
+        }
+        // 3. Bare SAJIL-OWNER-SETUP (oldest backward compat → 6 months)
+        if (verify(code, "SAJIL-OWNER-SETUP")) {
+            return SetupResult(true, 6L * 30 * 24 * 60 * 60 * 1000L)
+        }
+        return SetupResult(false, 0L)
+    }
+
+    /**
+     * Returns true if the given duration represents an unlimited license.
+     */
+    fun isUnlimited(durationMs: Long): Boolean = durationMs == Long.MAX_VALUE
+
+    /**
+     * Supported durations and their display labels.
+     */
+    val supportedDurations: List<Pair<Long, String>>
+        get() = KNOWN_DURATIONS.map { ms ->
+            ms to when (ms) {
+                3L * 24 * 60 * 60 * 1000L -> "3 أيام"
+                6L * 30 * 24 * 60 * 60 * 1000L -> "6 أشهر"
+                Long.MAX_VALUE -> "غير محدود"
+                else -> "${ms}ms"
+            }
+        }
 }

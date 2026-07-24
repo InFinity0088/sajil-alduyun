@@ -81,6 +81,58 @@
         android:text="تجديد الرخصة"
         android:backgroundTint="#CFFF04"
         android:textColor="#0D2117"
-        app:cornerRadius="12dp"/>
+        app:cornerRadius="12dp"
+        android:layout_marginBottom="32dp"/>
+
+    <!-- Revoke license -->
+    <TextView
+        android:id="@+id/tvToggleRevoke"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="إبطال الترخيص على هذا الجهاز"
+        android:textColor="#FF4444"
+        android:textSize="13sp"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="8dp"/>
+
+    <LinearLayout
+        android:id="@+id/layoutRevoke"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            app:boxStrokeColor="#1A3525"
+            app:hintTextColor="#6B9E7A"
+            app:boxBackgroundColor="@android:color/transparent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etRevokeCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="رمز الإبطال"
+                android:inputType="text"
+                android:textColor="#FFFFFF"
+                android:padding="12dp"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRevoke"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="إبطال"
+            android:backgroundTint="#FF4444"
+            android:textColor="#FFFFFF"
+            app:cornerRadius="12dp"/>
+
+    </LinearLayout>
 
 </LinearLayout>

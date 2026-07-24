@@ -8,28 +8,25 @@ object DebtManager {
 
     // --- RULE 1: Check if a debt should be LOCKED based on amount ---
     fun checkAmountLimit(debt: CustomerDebt): DebtStatus {
-        return when (debt.planType) {
-            PlanType.THIRTY_DAY -> {
-                if (debt.amount > 100_000.0) DebtStatus.LOCKED
-                else DebtStatus.APPROVED
-            }
-            PlanType.UNLIMITED -> {
-                if (debt.amount > 25_000.0) DebtStatus.LOCKED
-                else DebtStatus.APPROVED
-            }
+        // maxLimit == 0.0 means no amount limit
+        return if (debt.maxLimit > 0.0 && debt.amount > debt.maxLimit) {
+            DebtStatus.LOCKED
+        } else {
+            DebtStatus.APPROVED
         }
     }
 
-    // --- RULE 2: Check if 30-day plan has exceeded its time limit ---
+    // --- RULE 2: Check if the debt has exceeded its time limit ---
+    // planDurationDays == 0 means no time limit (never overdue)
     // Returns true if the debt is overdue
     fun isOverdue(debt: CustomerDebt): Boolean {
-        if (debt.planType != PlanType.THIRTY_DAY) return false
+        if (debt.planDurationDays <= 0) return false  // no time limit
 
         val now = Date()
         val diffInMs = now.time - debt.createdAt.time
         val diffInDays = TimeUnit.MILLISECONDS.toDays(diffInMs)
 
-        return diffInDays > 30
+        return diffInDays > debt.planDurationDays
     }
 
     // --- RULE 3: Full status check combining amount + time ---
@@ -58,17 +55,21 @@ object DebtManager {
     fun createDebt(
         customerName: String,
         amount: Double,
-        planType: PlanType,
+        planId: Long,
+        maxLimit: Double,
+        planDurationDays: Int,
         createdByUser: User
     ): CustomerDebt {
-        // Generate a unique ID using current timestamp
         val id = "DEBT_${Date().time}"
 
-        return DebtFactory.create(
+        return CustomerDebt(
             id = id,
             customerName = customerName,
             amount = amount,
-            planType = planType,
+            planId = planId,
+            maxLimit = maxLimit,
+            planDurationDays = planDurationDays,
+            status = DebtStatus.PENDING,
             createdByUserId = createdByUser.id
         )
     }

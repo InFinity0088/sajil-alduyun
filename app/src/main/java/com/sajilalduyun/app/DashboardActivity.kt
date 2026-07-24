@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sajilalduyun.app.database.AppDatabase
 import com.sajilalduyun.app.model.CustomerDebt
 import com.sajilalduyun.app.model.DebtStatus
-import com.sajilalduyun.app.model.PlanType
 import com.sajilalduyun.app.model.UserRole
 import com.sajilalduyun.app.service.BackupService
 import com.sajilalduyun.app.service.DebtCheckService
@@ -42,6 +41,7 @@ class DashboardActivity : BaseActivity() {
     private lateinit var etSearch: EditText
     private lateinit var btnLogoutOwner: ImageButton
     private lateinit var btnManageWorkers: ImageButton
+    private lateinit var btnManagePlans: ImageButton
     private lateinit var btnNotifications: ImageButton
     private lateinit var rvDebts: RecyclerView
     private lateinit var horizontalScrollAlerts: HorizontalScrollView
@@ -119,6 +119,7 @@ class DashboardActivity : BaseActivity() {
         etSearch = findViewById(R.id.etSearch)
         btnLogoutOwner = findViewById(R.id.btnLogoutOwner)
         btnManageWorkers = findViewById(R.id.btnManageWorkers)
+        btnManagePlans = findViewById(R.id.btnManagePlans)
         btnNotifications = findViewById(R.id.btnNotifications)
         rvDebts = findViewById(R.id.rvDebts)
         horizontalScrollAlerts = findViewById(R.id.horizontalScrollAlerts)
@@ -195,6 +196,7 @@ class DashboardActivity : BaseActivity() {
             layoutOwner.visibility = View.VISIBLE
 
             btnManageWorkers.visibility = View.VISIBLE
+            btnManagePlans.visibility = View.VISIBLE
             btnAddDebt.visibility = View.VISIBLE
 
             btnAddDebt.setOnClickListener {
@@ -206,6 +208,12 @@ class DashboardActivity : BaseActivity() {
 
             btnManageWorkers.setOnClickListener {
                 val intent = Intent(this, WorkerManagementActivity::class.java)
+                intent.putExtra("USER_ID", userId)
+                startActivity(intent)
+            }
+
+            btnManagePlans.setOnClickListener {
+                val intent = Intent(this, PlanManagementActivity::class.java)
                 intent.putExtra("USER_ID", userId)
                 startActivity(intent)
             }
@@ -332,7 +340,7 @@ class DashboardActivity : BaseActivity() {
         val reasonTv = TextView(this)
         reasonTv.setTextColor(Color.parseColor("#FF8C00"))
         reasonTv.textSize = 11f
-        reasonTv.text = if (debt.planType == PlanType.THIRTY_DAY) "متأخر +30 يوم" else "تجاوز السقف"
+        reasonTv.text = if (debt.planDurationDays > 0) "متأخر +${debt.planDurationDays} يوم" else "تجاوز السقف"
 
         inner.addView(nameTv)
         inner.addView(reasonTv)
@@ -380,7 +388,7 @@ class DashboardActivity : BaseActivity() {
             val debt = debts[position]
             holder.tvName.text   = debt.customerName
             holder.tvAmount.text = "${NumberFormatter.formatWithCommas(debt.amount.toLong())} د.ع"
-            holder.tvPlan.text   = if (debt.planType == PlanType.THIRTY_DAY) "30 يوم" else "مفتوح"
+            holder.tvPlan.text   = if (debt.planDurationDays > 0) "${debt.planDurationDays} يوم" else "مفتوح"
 
             when (debt.status) {
                 DebtStatus.APPROVED -> {

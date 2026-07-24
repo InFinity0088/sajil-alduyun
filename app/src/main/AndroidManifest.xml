@@ -53,6 +53,8 @@
             android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".WorkerManagementActivity"
             android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".PlanManagementActivity"
+            android:windowSoftInputMode="adjustResize"/>
 
     </application>
 

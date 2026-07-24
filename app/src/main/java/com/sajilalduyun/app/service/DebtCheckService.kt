@@ -4,7 +4,6 @@ import android.content.Context
 import com.sajilalduyun.app.database.AppDatabase
 import com.sajilalduyun.app.logic.DebtManager
 import com.sajilalduyun.app.model.DebtStatus
-import com.sajilalduyun.app.model.PlanType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,8 +23,8 @@ object DebtCheckService {
                 // Skip already locked debts
                 if (debt.status == DebtStatus.LOCKED) return@forEach
 
-                // Check if 30-day plan is overdue
-                if (debt.planType == PlanType.THIRTY_DAY && DebtManager.isOverdue(debt)) {
+                // Check if debt exceeded its time limit (planDurationDays > 0)
+                if (debt.planDurationDays > 0 && DebtManager.isOverdue(debt)) {
                     // Update status to LOCKED in database
                     val updatedDebt = debt.copy(status = DebtStatus.LOCKED)
                     db.debtDao().updateDebt(updatedDebt)
@@ -34,13 +33,13 @@ object DebtCheckService {
                     NotificationHelper.sendAlert(
                         context,
                         "تجاوز المدة المحددة",
-                        "الزبون ${debt.customerName} تجاوز 30 يوماً بدون سداد",
+                        "الزبون ${debt.customerName} تجاوز ${debt.planDurationDays} يوماً بدون سداد",
                         alertId++
                     )
                 }
 
-                // Check if amount exceeded limit
-                if (debt.amount > debt.maxLimit) {
+                // Check if amount exceeded limit (maxLimit > 0)
+                if (debt.maxLimit > 0.0 && debt.amount > debt.maxLimit) {
                     val updatedDebt = debt.copy(status = DebtStatus.LOCKED)
                     db.debtDao().updateDebt(updatedDebt)
 
