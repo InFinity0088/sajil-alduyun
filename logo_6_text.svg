@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <style>
+      .bg { fill: #0D2117; }
+      .word-top { font-family: 'Noto Kufi Arabic', 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif; font-weight: 900; fill: #FFFFFF; }
+      .word-bottom { font-family: 'Noto Kufi Arabic', 'Cairo', 'Segoe UI', Tahoma, Arial, sans-serif; font-weight: 900; fill: #CFFF04; }
+      .accent-line { fill: #CFFF04; }
+    </style>
+  </defs>
+  <!-- Background circle -->
+  <circle class="bg" cx="256" cy="256" r="256"/>
+
+  <!-- Subtle decorative accent line above and below the text block -->
+  <rect class="accent-line" x="156" y="145" width="200" height="3" rx="1.5" opacity="0.4"/>
+
+  <!-- "سجل" in bold white on top -->
+  <text class="word-top" x="256" y="245" text-anchor="middle" font-size="110" dominant-baseline="central">سجل</text>
+
+  <!-- "الديون" in bold lime below -->
+  <text class="word-bottom" x="256" y="350" text-anchor="middle" font-size="90" dominant-baseline="central">الديون</text>
+
+  <!-- Subtle decorative accent line at the bottom -->
+  <rect class="accent-line" x="156" y="385" width="200" height="3" rx="1.5" opacity="0.4"/>
+</svg>
