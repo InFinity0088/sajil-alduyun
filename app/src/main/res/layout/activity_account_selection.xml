@@ -9,7 +9,16 @@
     android:orientation="vertical"
     android:padding="24dp">
 
-    <!-- Title -->
+    <!-- App logo and account title -->
+    <ImageView
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:src="@drawable/logo_main"
+        android:contentDescription="سجل الديون"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:layout_marginBottom="12dp"/>
+
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"

@@ -8,9 +8,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher_candidate_text"
+        android:icon="@mipmap/ic_launcher"
         android:label="سجل الديون"
-        android:roundIcon="@mipmap/ic_launcher_candidate_text_round"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SajilAlDuyun">
 
