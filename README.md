@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="logo.svg" width="120" height="120" alt="سجل الديون">
+  <img src="logo_6_text.svg" width="120" height="120" alt="سجل الديون">
 </p>
 
 <h1 align="center">سجل الديون</h1>
@@ -143,7 +143,7 @@ The license generator is at `~/Desktop/license_tools/` (local only — never com
 **InFinity0088**
 
 <p align="center">
-  <img src="logo.svg" width="48" height="48" alt="logo">
+  <img src="logo_6_text.svg" width="48" height="48" alt="logo">
   <br>
   <sub>سجل الديون — Sajil al-Duyun © 2026</sub>
 </p>
