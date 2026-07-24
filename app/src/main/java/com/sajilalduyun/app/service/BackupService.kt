@@ -9,7 +9,6 @@ import com.sajilalduyun.app.database.AppDatabase
 import com.sajilalduyun.app.model.CustomerDebt
 import com.sajilalduyun.app.model.DebtHistory
 import com.sajilalduyun.app.model.DebtStatus
-import com.sajilalduyun.app.model.PlanType
 import com.sajilalduyun.app.model.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -60,9 +59,12 @@ object BackupService {
             sb.appendLine("لا توجد ديون مسجلة.")
         } else {
             debts.forEachIndexed { index: Int, debt: CustomerDebt ->
-                val planLabel = when (debt.planType) {
-                    PlanType.THIRTY_DAY -> "الخطة أ (30 يوم - حد 100,000)"
-                    PlanType.UNLIMITED  -> "الخطة ب (بلا حد زمني - حد 25,000)"
+                val planLabel = if (debt.planDurationDays > 0) {
+                    if (debt.maxLimit > 0.0) "خطة ${debt.planDurationDays} يوم - حد ${String.format(Locale.US, "%,.0f", debt.maxLimit)}"
+                    else "خطة ${debt.planDurationDays} يوم - بدون حد"
+                } else {
+                    if (debt.maxLimit > 0.0) "خطة مفتوحة - حد ${String.format(Locale.US, "%,.0f", debt.maxLimit)}"
+                    else "خطة مفتوحة - بدون حد"
                 }
                 val statusLabel = when (debt.status) {
                     DebtStatus.APPROVED -> "معتمد"
@@ -228,8 +230,9 @@ object BackupService {
         put("id", id)
         put("customerName", customerName)
         put("amount", amount)
-        put("planType", planType.name)
+        put("planId", planId)
         put("maxLimit", maxLimit)
+        put("planDurationDays", planDurationDays)
         put("status", status.name)
         put("createdByUserId", createdByUserId)
         put("createdAt", createdAt.time)
@@ -240,8 +243,9 @@ object BackupService {
         id = getString("id"),
         customerName = getString("customerName"),
         amount = getDouble("amount"),
-        planType = PlanType.valueOf(getString("planType")),
+        planId = getLong("planId"),
         maxLimit = getDouble("maxLimit"),
+        planDurationDays = if (has("planDurationDays")) getInt("planDurationDays") else 0,
         status = DebtStatus.valueOf(getString("status")),
         createdByUserId = getString("createdByUserId"),
         createdAt = Date(getLong("createdAt")),

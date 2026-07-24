@@ -112,6 +112,64 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- Device ID card (machine-locking info) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#1A3525"
+                    android:padding="14dp"
+                    android:layout_marginBottom="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="رقم جهازك:"
+                            android:textColor="#6B9E7A"
+                            android:textSize="14sp"/>
+
+                        <TextView
+                            android:id="@+id/tvDeviceId"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="..."
+                            android:textColor="#CFFF04"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:gravity="center_horizontal"
+                            android:letterSpacing="0.1"/>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnCopyDeviceId"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:text="نسخ"
+                            android:textSize="12sp"
+                            android:backgroundTint="#132B1E"
+                            android:textColor="#CFFF04"
+                            app:cornerRadius="8dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"/>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="أرسل هذا الرقم إلى المسؤول لاستلام رمز الترخيص أو رمز التحويل"
+                        android:textColor="#6B9E7A"
+                        android:textSize="12sp"
+                        android:layout_marginTop="4dp"/>
+
+                </LinearLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -195,6 +253,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <LinearLayout
+                    android:id="@+id/layoutOwnerError"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#2E0000"
@@ -333,6 +392,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <LinearLayout
+                    android:id="@+id/layoutWorkerError"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#2E0000"

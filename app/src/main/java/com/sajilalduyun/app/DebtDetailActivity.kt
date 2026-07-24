@@ -14,7 +14,6 @@ import com.sajilalduyun.app.database.AppDatabase
 import com.sajilalduyun.app.model.CustomerDebt
 import com.sajilalduyun.app.model.DebtHistory
 import com.sajilalduyun.app.model.DebtStatus
-import com.sajilalduyun.app.model.PlanType
 import com.sajilalduyun.app.model.UserRole
 import com.sajilalduyun.app.ui.MaterialDialogHelper
 import com.sajilalduyun.app.util.NumberFormatter
@@ -156,10 +155,9 @@ class DebtDetailActivity : BaseActivity() {
         tvDetailCustomerName.text = debt.customerName
         tvDetailAmount.text = "${NumberFormatter.formatWithCommas(debt.amount.toLong())} د.ع"
 
-        tvDetailPlan.text = when (debt.planType) {
-            PlanType.THIRTY_DAY -> "30 يوم — حد أقصى 100,000 د.ع"
-            PlanType.UNLIMITED  -> "مفتوح — حد أقصى 25,000 د.ع"
-        }
+        val durationLabel = if (debt.planDurationDays > 0) "${debt.planDurationDays} يوم" else "بدون مدة"
+        val capLabel = if (debt.maxLimit > 0.0) "${NumberFormatter.formatWithCommas(debt.maxLimit.toLong())} د.ع" else "بدون سقف"
+        tvDetailPlan.text = "$durationLabel — حد أقصى $capLabel"
 
         when (debt.status) {
             DebtStatus.APPROVED -> {

@@ -1,17 +1,21 @@
 package com.sajilalduyun.app
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.sajilalduyun.app.database.AppDatabase
 import com.sajilalduyun.app.model.User
 import com.sajilalduyun.app.model.UserRole
-import com.sajilalduyun.app.security.LicenseVerifier
 import com.sajilalduyun.app.security.SecurityManager
 import kotlinx.coroutines.launch
 import java.util.Date
@@ -27,11 +31,14 @@ class SetupActivity : BaseActivity() {
 
     // Owner form
     private lateinit var cardOwner: MaterialCardView
+    private lateinit var tvDeviceId: TextView
+    private lateinit var btnCopyDeviceId: MaterialButton
     private lateinit var etOwnerName: EditText
     private lateinit var etLicenseCode: EditText
     private lateinit var etOwnerPin: EditText
     private lateinit var etOwnerPinConfirm: EditText
     private lateinit var etOwnerPhone: EditText
+    private lateinit var layoutOwnerError: LinearLayout
     private lateinit var tvOwnerError: TextView
     private lateinit var btnCreateOwner: MaterialButton
 
@@ -41,6 +48,7 @@ class SetupActivity : BaseActivity() {
     private lateinit var etWorkerCode: EditText
     private lateinit var etWorkerPin: EditText
     private lateinit var etWorkerPhone: EditText
+    private lateinit var layoutWorkerError: LinearLayout
     private lateinit var tvWorkerError: TextView
     private lateinit var btnRegisterWorker: MaterialButton
 
@@ -53,11 +61,14 @@ class SetupActivity : BaseActivity() {
         btnChooseOwner = findViewById(R.id.btnChooseOwner)
         btnChooseWorker = findViewById(R.id.btnChooseWorker)
         cardOwner = findViewById(R.id.cardOwner)
+        tvDeviceId = findViewById(R.id.tvDeviceId)
+        btnCopyDeviceId = findViewById(R.id.btnCopyDeviceId)
         etOwnerName = findViewById(R.id.etOwnerName)
         etLicenseCode = findViewById(R.id.etLicenseCode)
         etOwnerPin = findViewById(R.id.etOwnerPin)
         etOwnerPinConfirm = findViewById(R.id.etOwnerPinConfirm)
         etOwnerPhone = findViewById(R.id.etOwnerPhone)
+        layoutOwnerError = findViewById(R.id.layoutOwnerError)
         tvOwnerError = findViewById(R.id.tvOwnerError)
         btnCreateOwner = findViewById(R.id.btnCreateOwner)
         cardWorker = findViewById(R.id.cardWorker)
@@ -65,6 +76,7 @@ class SetupActivity : BaseActivity() {
         etWorkerCode = findViewById(R.id.etWorkerCode)
         etWorkerPin = findViewById(R.id.etWorkerPin)
         etWorkerPhone = findViewById(R.id.etWorkerPhone)
+        layoutWorkerError = findViewById(R.id.layoutWorkerError)
         tvWorkerError = findViewById(R.id.tvWorkerError)
         btnRegisterWorker = findViewById(R.id.btnRegisterWorker)
 
@@ -72,6 +84,17 @@ class SetupActivity : BaseActivity() {
         btnChooseOwner.setOnClickListener {
             cardOwner.visibility = View.VISIBLE
             cardWorker.visibility = View.GONE
+            showDeviceId()
+        }
+
+        // Copy device ID button
+        btnCopyDeviceId.setOnClickListener {
+            val deviceId = tvDeviceId.text.toString()
+            if (deviceId.isNotEmpty()) {
+                val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                clipboard.setPrimaryClip(ClipData.newPlainText("device_id", deviceId))
+                Toast.makeText(this, "تم نسخ رقم الجهاز", Toast.LENGTH_SHORT).show()
+            }
         }
 
         // Show worker form when worker is chosen
@@ -93,7 +116,6 @@ class SetupActivity : BaseActivity() {
 
         if (name.isEmpty()) { showOwnerError("يرجى إدخال اسمك"); return }
         if (licenseCode.isEmpty()) { showOwnerError("يرجى إدخال رمز الترخيص"); return }
-        if (!LicenseVerifier.verify(licenseCode, "SAJIL-OWNER-SETUP")) { showOwnerError("رمز الترخيص غير صحيح"); return }
         if (pin.length < 4) { showOwnerError("الرقم السري يجب أن يكون 4 أرقام على الأقل"); return }
         if (pin != pinConfirm) { showOwnerError("الرقم السري غير متطابق"); return }
         if (!isValidIraqiPhone(phone)) { showOwnerError("رقم الهاتف يجب أن يكون بالصيغة: 07xxxxxxxxx"); return }
@@ -108,6 +130,13 @@ class SetupActivity : BaseActivity() {
                 return@launch
             }
 
+            // Verify license code + consume it + activate with correct duration
+            val activation = LicenseManager.activateLicenseFromCode(applicationContext, licenseCode)
+            if (!activation.success) {
+                runOnUiThread { showOwnerError(activation.errorMessage ?: "رمز الترخيص غير صحيح") }
+                return@launch
+            }
+
             val owner = User(
                 id = "OWNER_001",
                 name = name,
@@ -118,7 +147,6 @@ class SetupActivity : BaseActivity() {
             )
 
             db.userDao().insertUser(owner)
-            LicenseManager.activateLicense(applicationContext)
             BackupReminderManager.scheduleBackupReminder(applicationContext)
 
             // Save setup info
@@ -184,14 +212,20 @@ class SetupActivity : BaseActivity() {
         }
     }
 
+    /** Reads the device Android ID and displays it in the owner form. */
+    private fun showDeviceId() {
+        val deviceId = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID) ?: "غير متاح"
+        tvDeviceId.text = deviceId
+    }
+
     private fun showOwnerError(msg: String) {
         tvOwnerError.text = msg
-        tvOwnerError.visibility = View.VISIBLE
+        layoutOwnerError.visibility = View.VISIBLE
     }
 
     private fun showWorkerError(msg: String) {
         tvWorkerError.text = msg
-        tvWorkerError.visibility = View.VISIBLE
+        layoutWorkerError.visibility = View.VISIBLE
     }
 
     private fun isValidIraqiPhone(phone: String): Boolean {
