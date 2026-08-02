@@ -24,6 +24,7 @@ open class BaseActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         super.onCreate(savedInstanceState)
         SecurityManager.init(applicationContext)
         userId = intent.getStringExtra("USER_ID") ?: ""

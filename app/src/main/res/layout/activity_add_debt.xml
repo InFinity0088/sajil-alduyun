@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0D2117"
+    android:background="@color/background"
     android:layoutDirection="rtl">
 
     <LinearLayout
@@ -28,7 +28,7 @@
                 android:src="@drawable/ic_arrow_back"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="رجوع"
-                app:tint="#FFFFFF"
+                app:tint="@color/text_primary"
                 android:layout_marginEnd="12dp"/>
 
             <TextView
@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="تسجيل دين جديد"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_primary"
                 android:textSize="24sp"
                 android:textStyle="bold"/>
         </LinearLayout>
@@ -48,8 +48,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            app:boxStrokeColor="#1A3525"
-            app:hintTextColor="#6B9E7A"
+            app:boxStrokeColor="@color/status_active_bg"
+            app:hintTextColor="@color/text_secondary"
             app:boxBackgroundColor="@android:color/transparent"
             app:endIconMode="dropdown_menu">
 
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:hint="اسم الزبون"
                 android:inputType="textPersonName"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_primary"
                 android:padding="12dp"
                 android:importantForAutofill="no"/>
         </com.google.android.material.textfield.TextInputLayout>
@@ -71,8 +71,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            app:boxStrokeColor="#1A3525"
-            app:hintTextColor="#6B9E7A"
+            app:boxStrokeColor="@color/status_active_bg"
+            app:hintTextColor="@color/text_secondary"
             app:boxBackgroundColor="@android:color/transparent">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -81,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:hint="المبلغ (د.ع)"
                 android:inputType="numberDecimal"
-                android:textColor="#CFFF04"
+                android:textColor="@color/status_active"
                 android:textSize="32sp"
                 android:padding="12dp"/>
         </com.google.android.material.textfield.TextInputLayout>
@@ -98,7 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="نوع الخطة"
-                android:textColor="#6B9E7A"
+                android:textColor="@color/text_secondary"
                 android:textSize="13sp"
                 android:layout_marginBottom="12dp"/>
 
@@ -114,7 +114,7 @@
             android:id="@+id/layoutError"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#2E0000"
+            android:background="@color/status_locked_bg"
             android:gravity="center"
             android:padding="12dp"
             android:layout_marginBottom="16dp"
@@ -125,7 +125,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=""
-                android:textColor="#FF4444"
+                android:textColor="@color/status_locked"
                 android:textSize="13sp"/>
         </LinearLayout>
 
@@ -135,8 +135,8 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:text="حفظ الدين"
-            android:backgroundTint="#CFFF04"
-            android:textColor="#0D2117"
+            android:backgroundTint="@color/primary"
+            android:textColor="@color/primary_on"
             android:textSize="16sp"
             app:cornerRadius="12dp"/>
 

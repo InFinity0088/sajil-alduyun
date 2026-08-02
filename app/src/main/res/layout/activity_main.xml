@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0D2117"
+    android:background="@color/background"
     android:gravity="center"
     android:layoutDirection="rtl"
     android:orientation="vertical"
@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="سجّل دخولك"
-        android:textColor="#6B9E7A"
+        android:textColor="@color/text_secondary"
         android:textSize="14sp"
         android:layout_marginBottom="48dp"/>
 
@@ -36,9 +36,9 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        app:boxStrokeColor="#1A3525"
+        app:boxStrokeColor="@color/status_active_bg"
         app:boxStrokeWidth="1dp"
-        app:hintTextColor="#6B9E7A"
+        app:hintTextColor="@color/text_secondary"
         app:boxBackgroundColor="@android:color/transparent">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:hint="رمز المستخدم"
             android:inputType="text"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_primary"
             android:textSize="15sp"
             android:padding="12dp"/>
 
@@ -60,9 +60,9 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        app:boxStrokeColor="#1A3525"
+        app:boxStrokeColor="@color/status_active_bg"
         app:boxStrokeWidth="1dp"
-        app:hintTextColor="#6B9E7A"
+        app:hintTextColor="@color/text_secondary"
         app:boxBackgroundColor="@android:color/transparent"
         app:passwordToggleEnabled="true">
 
@@ -72,7 +72,7 @@
             android:layout_height="wrap_content"
             android:hint="الرقم السري"
             android:inputType="numberPassword"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_primary"
             android:textSize="15sp"
             android:padding="12dp"/>
 
@@ -83,7 +83,7 @@
         android:id="@+id/layoutError"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#2E0000"
+        android:background="@color/status_locked_bg"
         android:gravity="center"
         android:padding="12dp"
         android:layout_marginBottom="16dp"
@@ -94,7 +94,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:textColor="#FF4444"
+            android:textColor="@color/status_locked"
             android:textSize="13sp"/>
     </LinearLayout>
 
@@ -104,11 +104,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="بصّم إصبعك لتسجيل الدخول السريع..."
-        android:textColor="#CFFF04"
+        android:textColor="@color/status_active"
         android:textSize="14sp"
         android:gravity="center"
         android:padding="16dp"
-        android:background="#1A3525"
+        android:background="@color/status_active_bg"
         android:visibility="gone"
         android:layout_marginBottom="16dp"/>
 
@@ -118,8 +118,8 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:text="دخول"
-        android:backgroundTint="#CFFF04"
-        android:textColor="#0D2117"
+        android:backgroundTint="@color/primary"
+        android:textColor="@color/primary_on"
         android:textSize="16sp"
         app:cornerRadius="12dp"/>
 

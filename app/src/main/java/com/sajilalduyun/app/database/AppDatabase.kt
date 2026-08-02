@@ -25,7 +25,7 @@ import com.sajilalduyun.app.model.User
         PaymentPlan::class,
         RevokedLicense::class
     ],
-    version = 6
+    version = 7
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -95,13 +95,45 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        // Migration from v6 → v7: change DebtHistory.id from Long autoGenerate to String UUID
+        // This prevents the "history shows 5 times" duplication bug caused by Firestore
+        // syncing id=0 back to Room, where autoGenerate creates a new row each time.
+        val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS `debt_history_new` (
+                        `id` TEXT NOT NULL,
+                        `debtId` TEXT NOT NULL,
+                        `actionType` TEXT NOT NULL,
+                        `oldAmount` REAL NOT NULL,
+                        `newAmount` REAL NOT NULL,
+                        `changedByUserId` TEXT NOT NULL,
+                        `notes` TEXT NOT NULL DEFAULT '',
+                        `changedAt` INTEGER NOT NULL,
+                        PRIMARY KEY(`id`)
+                    )
+                """.trimIndent())
+                // Convert existing numeric IDs to strings — they'll keep working as
+                // primary keys and match existing Firestore doc IDs.
+                db.execSQL("""
+                    INSERT INTO debt_history_new
+                    SELECT CAST(id AS TEXT), debtId, actionType, oldAmount, newAmount,
+                           changedByUserId, notes, changedAt
+                    FROM debt_history
+                """.trimIndent())
+                db.execSQL("DROP TABLE debt_history")
+                db.execSQL("ALTER TABLE debt_history_new RENAME TO debt_history")
+            }
+        }
+
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
                     "sajil_alduyun_db"
-                ).addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
+                ).addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
+                    .fallbackToDestructiveMigration(false)  // Safety net for very old DB versions (v1/v2)
                     .addCallback(object : Callback() {
                         override fun onCreate(db: SupportSQLiteDatabase) {
                             super.onCreate(db)

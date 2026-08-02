@@ -12,8 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        app:boxStrokeColor="#1A3525"
-        app:hintTextColor="#6B9E7A"
+        app:boxStrokeColor="@color/status_active_bg"
+        app:hintTextColor="@color/text_secondary"
         app:boxBackgroundColor="@android:color/transparent">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:hint="اسم الخطة"
             android:inputType="text"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_primary"
             android:padding="12dp"/>
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -32,8 +32,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        app:boxStrokeColor="#1A3525"
-        app:hintTextColor="#6B9E7A"
+        app:boxStrokeColor="@color/status_active_bg"
+        app:hintTextColor="@color/text_secondary"
         app:boxBackgroundColor="@android:color/transparent">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:hint="عدد الأيام (0 = بدون مدة)"
             android:inputType="number"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_primary"
             android:padding="12dp"/>
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -52,8 +52,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        app:boxStrokeColor="#1A3525"
-        app:hintTextColor="#6B9E7A"
+        app:boxStrokeColor="@color/status_active_bg"
+        app:hintTextColor="@color/text_secondary"
         app:boxBackgroundColor="@android:color/transparent">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:hint="الحد الأقصى للمبلغ (0 = بدون حد)"
             android:inputType="numberDecimal"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_primary"
             android:padding="12dp"/>
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -72,7 +72,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
-        android:textColor="#FF4444"
+        android:textColor="@color/status_locked"
         android:textSize="13sp"
         android:visibility="gone"/>
 

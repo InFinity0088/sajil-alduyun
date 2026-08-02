@@ -1,0 +1,100 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Helpers ─────────────────────────────────────────────
+    // Each device signs in via Firebase anonymous auth (persists
+    // across restarts).  The uid_mapping collection links each
+    // Firebase auth UID to the app-level userId + role.
+    function isAuth() {
+      return request.auth != null;
+    }
+
+    /** The app-level userId for the current Firebase auth UID. */
+    function myUserId() {
+      return get(/databases/$(database)/documents/uid_mappings/$(request.auth.uid)).data.appUserId;
+    }
+
+    /** The app-level role for the current Firebase auth UID. */
+    function myRole() {
+      return get(/databases/$(database)/documents/uid_mappings/$(request.auth.uid)).data.role;
+    }
+
+    function isOwner() {
+      return myRole() == "OWNER";
+    }
+
+    function isWorker() {
+      return myRole() == "WORKER";
+    }
+
+    // ── UID Mappings (bridge Firebase auth → app-level user) ─
+    match /uid_mappings/{firebaseUid} {
+      // Every device creates its own mapping record at sign-up.
+      allow read, write: if isAuth() && firebaseUid == request.auth.uid;
+    }
+
+    // ── Users ──────────────────────────────────────────────
+    // Each authenticated user reads/writes their own document.
+    // The owner can read all users (to manage workers).
+    match /users/{userId} {
+      allow read:  if isAuth() && (userId == myUserId() || isOwner());
+      allow write: if isAuth() && userId == myUserId();
+    }
+
+    // ── Debts ──────────────────────────────────────────────
+    // Owner: full access to all debts.
+    // Worker: can read/create/update debts they created; cannot delete.
+    match /debts/{debtId} {
+      allow read:   if isAuth() && (isOwner() || resource.data.createdByUserId == myUserId());
+      allow create: if isAuth() && request.resource.data.createdByUserId == myUserId();
+      allow update: if isAuth() && (isOwner() || resource.data.createdByUserId == myUserId());
+      allow delete: if isAuth() && isOwner();  // only owner can delete
+    }
+
+    // ── Debt History ───────────────────────────────────────
+    // Owner: full access.  Worker: only history for debts they created.
+    // Because Firestore can't join across collections, the worker
+    // check is best-effort — a determined worker could read other
+    // history.  Full isolation would require partitioning history
+    // by createdByUserId.
+    match /debt_history/{docId} {
+      allow read:   if isAuth() && (isOwner() || resource.data.changedByUserId == myUserId());
+      allow create: if isAuth() && request.resource.data.changedByUserId == myUserId();
+      allow write:  if isAuth() && isOwner();
+    }
+
+    // ── Plans ──────────────────────────────────────────────
+    // All authenticated users can read plans; only owner can write.
+    match /plans/{planId} {
+      allow read:  if isAuth();
+      allow write: if isAuth() && isOwner();
+    }
+
+    // ── Licenses ───────────────────────────────────────────
+    match /licenses/{ownerId} {
+      allow read, create: if isAuth();
+      allow update: if isAuth()
+        && request.resource.data.keys().hasAll([
+          'ownerId', 'active', 'licenseStartDate', 'licenseDurationMs'
+        ]);
+      allow delete: if false;  // never allow client-side deletion
+    }
+
+    // ── Consumed / Revoked Licenses ────────────────────────
+    // Read-only from the client; created offline in Room.
+    match /consumed_licenses/{hash} {
+      allow read:  if isAuth();
+      allow write: if false;
+    }
+    match /revoked_licenses/{deviceId} {
+      allow read:  if isAuth();
+      allow write: if false;
+    }
+
+    // ── Default deny ──────────────────────────────────────
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

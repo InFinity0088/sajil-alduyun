@@ -1,5 +1,6 @@
 package com.sajilalduyun.app
 
+import android.graphics.Color
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -11,14 +12,17 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.sajilalduyun.app.database.AppDatabase
 import com.sajilalduyun.app.model.CustomerDebt
 import com.sajilalduyun.app.model.DebtHistory
 import com.sajilalduyun.app.model.DebtStatus
 import com.sajilalduyun.app.model.UserRole
+import com.sajilalduyun.app.service.SyncService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -29,6 +33,10 @@ class PendingRequestsActivity : BaseActivity() {
     private lateinit var layoutEmpty: LinearLayout
     private lateinit var tvEmpty: TextView
     private lateinit var btnBack: ImageButton
+    private lateinit var layoutLoading: View
+    private lateinit var layoutError: View
+    private lateinit var tvErrorMessage: TextView
+    private lateinit var btnRetry: com.google.android.material.button.MaterialButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,18 +46,37 @@ class PendingRequestsActivity : BaseActivity() {
         layoutEmpty = findViewById(R.id.layoutEmpty)
         tvEmpty = findViewById(R.id.tvEmpty)
         btnBack = findViewById(R.id.btnBack)
+        layoutLoading = findViewById(R.id.layoutLoading)
+        layoutError = findViewById(R.id.layoutError)
+        tvErrorMessage = findViewById(R.id.tvErrorMessage)
+        btnRetry = findViewById(R.id.btnRetry)
 
         rvPendingRequests.layoutManager = LinearLayoutManager(this)
 
         btnBack.setOnClickListener { finish() }
+        btnRetry.setOnClickListener { loadPendingRequests() }
 
         loadPendingRequests()
     }
 
     private fun loadPendingRequests() {
         lifecycleScope.launch {
+            layoutLoading.visibility = View.VISIBLE
+            layoutError.visibility = View.GONE
+            rvPendingRequests.visibility = View.GONE
+            layoutEmpty.visibility = View.GONE
+
             val db = AppDatabase.getDatabase(applicationContext)
-            val allPending = db.debtDao().getPendingDebts()
+            val allPending = try {
+                db.debtDao().getPendingDebts()
+            } catch (e: Exception) {
+                runOnUiThread {
+                    layoutLoading.visibility = View.GONE
+                    layoutError.visibility = View.VISIBLE
+                    tvErrorMessage.text = "حدث خطأ في الاتصال، تحقق من الإنترنت"
+                }
+                return@launch
+            }
 
             // Filter by worker if current user is a worker
             val pendingDebts = if (userRole == UserRole.WORKER.name) {
@@ -70,6 +97,7 @@ class PendingRequestsActivity : BaseActivity() {
             }
 
             runOnUiThread {
+                layoutLoading.visibility = View.GONE
                 if (pendingDebts.isEmpty()) {
                     layoutEmpty.visibility = View.VISIBLE
                     rvPendingRequests.visibility = View.GONE
@@ -107,6 +135,9 @@ class PendingRequestsActivity : BaseActivity() {
                         db.debtHistoryDao().insert(historyEntry)
                         db.debtDao().deleteDebt(debt)
                     }
+                    // Sync to Firestore
+                    SyncService.syncDebtHistory(historyEntry)
+                    SyncService.deleteDebt(debt.id)
                 } else {
                     // Normal approval — record APPROVED history
                     val updatedDebt = debt.copy(status = DebtStatus.APPROVED)
@@ -121,10 +152,13 @@ class PendingRequestsActivity : BaseActivity() {
                         db.debtHistoryDao().insert(historyEntry)
                         db.debtDao().updateDebt(updatedDebt)
                     }
+                    // Sync to Firestore
+                    SyncService.syncDebt(updatedDebt)
+                    SyncService.syncDebtHistory(historyEntry)
                 }
                 runOnUiThread {
                     vibrate(50)
-                    Toast.makeText(this@PendingRequestsActivity, "تم قبول الطلب", Toast.LENGTH_SHORT).show()
+                    showSnackbar("تم قبول الطلب")
                     removeItemFromList(debt)
                 }
             } else if (action == "reject") {
@@ -140,13 +174,57 @@ class PendingRequestsActivity : BaseActivity() {
                     db.debtHistoryDao().insert(historyEntry)
                     db.debtDao().deleteDebt(debt)
                 }
+                // Sync to Firestore
+                SyncService.syncDebtHistory(historyEntry)
+                SyncService.deleteDebt(debt.id)
                 runOnUiThread {
                     vibrate(50)
-                    Toast.makeText(this@PendingRequestsActivity, "تم رفض الطلب", Toast.LENGTH_SHORT).show()
+                    val pendingDebt = debt
+                    showDeleteSnackbar("تم رفض الطلب") {
+                        undoRejectDebt(pendingDebt)
+                    }
                     removeItemFromList(debt)
                 }
             }
         }
+    }
+
+    private fun undoRejectDebt(debt: CustomerDebt) {
+        lifecycleScope.launch {
+            val db = AppDatabase.getDatabase(applicationContext)
+            withContext(Dispatchers.IO) {
+                db.debtDao().insertDebt(debt)
+            }
+            SyncService.syncDebt(debt)
+            showSnackbar("تم التراجع عن الرفض")
+            loadPendingRequests()
+        }
+    }
+
+    private fun showDeleteSnackbar(message: String, onUndo: () -> Unit) {
+        val snackbar = Snackbar.make(
+            findViewById(android.R.id.content),
+            message,
+            Snackbar.LENGTH_LONG
+        )
+        snackbar.view.setBackgroundTintList(
+            ContextCompat.getColorStateList(this, R.color.snackbar_background)
+        )
+        snackbar.setActionTextColor(ContextCompat.getColor(this, R.color.snackbar_action))
+        snackbar.setAction("تراجع") { onUndo() }
+        snackbar.show()
+    }
+
+    private fun showSnackbar(message: String) {
+        val snackbar = Snackbar.make(
+            findViewById(android.R.id.content),
+            message,
+            Snackbar.LENGTH_SHORT
+        )
+        snackbar.view.setBackgroundTintList(
+            ContextCompat.getColorStateList(this, R.color.snackbar_background)
+        )
+        snackbar.show()
     }
 
     private fun removeItemFromList(debt: CustomerDebt) {
@@ -204,10 +282,10 @@ class PendingRequestsActivity : BaseActivity() {
             // Operation type label
             if (debt.amount == 0.0) {
                 holder.tvOperationType.text = "طلب سداد كامل"
-                holder.tvOperationType.setTextColor(android.graphics.Color.parseColor("#4CAF50"))
+                holder.tvOperationType.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.history_created))
             } else {
                 holder.tvOperationType.text = "طلب تعديل مبلغ"
-                holder.tvOperationType.setTextColor(android.graphics.Color.parseColor("#F57C00"))
+                holder.tvOperationType.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.history_increased))
             }
 
             // Only owners can act

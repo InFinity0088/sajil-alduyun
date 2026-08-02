@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0D2117"
+    android:background="@color/background"
     android:layoutDirection="rtl">
 
     <LinearLayout
@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="من أنت؟"
-            android:textColor="#6B9E7A"
+            android:textColor="@color/text_secondary"
             android:textSize="18sp"
             android:layout_marginBottom="32dp"/>
 
@@ -46,8 +46,8 @@
                 android:layout_marginEnd="8dp"
                 android:text="مالك"
                 android:textSize="20sp"
-                android:backgroundTint="#CFFF04"
-                android:textColor="#0D2117"
+                android:backgroundTint="@color/primary"
+                android:textColor="@color/primary_on"
                 app:cornerRadius="12dp"/>
 
             <com.google.android.material.button.MaterialButton
@@ -60,8 +60,8 @@
                 android:textSize="20sp"
                 app:cornerRadius="12dp"
                 style="@style/Widget.Material3.Button.OutlinedButton"
-                app:strokeColor="#CFFF04"
-                android:textColor="#CFFF04"/>
+                app:strokeColor="@color/primary"
+                android:textColor="@color/status_active"/>
 
         </LinearLayout>
 
@@ -71,7 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            app:cardBackgroundColor="#132B1E"
+            app:cardBackgroundColor="@color/surface"
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
             app:strokeWidth="0dp"
@@ -87,7 +87,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="إنشاء حساب المالك"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/text_primary"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="20dp"/>
@@ -97,8 +97,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    app:boxStrokeColor="#1A3525"
-                    app:hintTextColor="#6B9E7A"
+                    app:boxStrokeColor="@color/status_active_bg"
+                    app:hintTextColor="@color/text_secondary"
                     app:boxBackgroundColor="@android:color/transparent">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -107,7 +107,7 @@
                         android:layout_height="wrap_content"
                         android:hint="اسمك"
                         android:inputType="textPersonName"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/text_primary"
                         android:padding="12dp"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -117,7 +117,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="#1A3525"
+                    android:background="@color/status_active_bg"
                     android:padding="14dp"
                     android:layout_marginBottom="16dp">
 
@@ -131,7 +131,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="رقم جهازك:"
-                            android:textColor="#6B9E7A"
+                            android:textColor="@color/text_secondary"
                             android:textSize="14sp"/>
 
                         <TextView
@@ -140,7 +140,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="..."
-                            android:textColor="#CFFF04"
+                            android:textColor="@color/status_active"
                             android:textSize="13sp"
                             android:textStyle="bold"
                             android:gravity="center_horizontal"
@@ -152,8 +152,8 @@
                             android:layout_height="32dp"
                             android:text="نسخ"
                             android:textSize="12sp"
-                            android:backgroundTint="#132B1E"
-                            android:textColor="#CFFF04"
+                            android:backgroundTint="@color/snackbar_background"
+                            android:textColor="@color/status_active"
                             app:cornerRadius="8dp"
                             android:paddingStart="12dp"
                             android:paddingEnd="12dp"/>
@@ -164,7 +164,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="أرسل هذا الرقم إلى المسؤول لاستلام رمز الترخيص أو رمز التحويل"
-                        android:textColor="#6B9E7A"
+                        android:textColor="@color/text_secondary"
                         android:textSize="12sp"
                         android:layout_marginTop="4dp"/>
 
@@ -175,8 +175,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    app:boxStrokeColor="#1A3525"
-                    app:hintTextColor="#6B9E7A"
+                    app:boxStrokeColor="@color/status_active_bg"
+                    app:hintTextColor="@color/text_secondary"
                     app:boxBackgroundColor="@android:color/transparent">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -185,7 +185,7 @@
                         android:layout_height="wrap_content"
                         android:hint="رمز الترخيص"
                         android:inputType="text"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/text_primary"
                         android:padding="12dp"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -195,8 +195,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    app:boxStrokeColor="#1A3525"
-                    app:hintTextColor="#6B9E7A"
+                    app:boxStrokeColor="@color/status_active_bg"
+                    app:hintTextColor="@color/text_secondary"
                     app:boxBackgroundColor="@android:color/transparent"
                     app:passwordToggleEnabled="true">
 
@@ -206,7 +206,7 @@
                         android:layout_height="wrap_content"
                         android:hint="الرقم السري"
                         android:inputType="numberPassword"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/text_primary"
                         android:padding="12dp"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -216,8 +216,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    app:boxStrokeColor="#1A3525"
-                    app:hintTextColor="#6B9E7A"
+                    app:boxStrokeColor="@color/status_active_bg"
+                    app:hintTextColor="@color/text_secondary"
                     app:boxBackgroundColor="@android:color/transparent"
                     app:passwordToggleEnabled="true">
 
@@ -227,7 +227,7 @@
                         android:layout_height="wrap_content"
                         android:hint="تأكيد الرقم السري"
                         android:inputType="numberPassword"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/text_primary"
                         android:padding="12dp"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -237,8 +237,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    app:boxStrokeColor="#1A3525"
-                    app:hintTextColor="#6B9E7A"
+                    app:boxStrokeColor="@color/status_active_bg"
+                    app:hintTextColor="@color/text_secondary"
                     app:boxBackgroundColor="@android:color/transparent">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -247,7 +247,7 @@
                         android:layout_height="wrap_content"
                         android:hint="رقم الهاتف (07xxxxxxxxx)"
                         android:inputType="phone"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/text_primary"
                         android:padding="12dp"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -256,7 +256,7 @@
                     android:id="@+id/layoutOwnerError"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#2E0000"
+                    android:background="@color/status_locked_bg"
                     android:gravity="center"
                     android:padding="12dp"
                     android:layout_marginBottom="16dp"
@@ -267,7 +267,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:textColor="#FF4444"
+                        android:textColor="@color/status_locked"
                         android:textSize="13sp"/>
                 </LinearLayout>
 
@@ -276,8 +276,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:text="إنشاء الحساب"
-                    android:backgroundTint="#CFFF04"
-                    android:textColor="#0D2117"
+                    android:backgroundTint="@color/primary"
+                    android:textColor="@color/primary_on"
                     app:cornerRadius="12dp"/>
 
             </LinearLayout>
@@ -289,7 +289,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            app:cardBackgroundColor="#132B1E"
+            app:cardBackgroundColor="@color/surface"
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
             app:strokeWidth="0dp"
@@ -305,7 +305,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="تسجيل موظف"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/text_primary"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="20dp"/>
@@ -315,8 +315,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    app:boxStrokeColor="#1A3525"
-                    app:hintTextColor="#6B9E7A"
+                    app:boxStrokeColor="@color/status_active_bg"
+                    app:hintTextColor="@color/text_secondary"
                     app:boxBackgroundColor="@android:color/transparent">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -325,7 +325,7 @@
                         android:layout_height="wrap_content"
                         android:hint="اسمك"
                         android:inputType="textPersonName"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/text_primary"
                         android:padding="12dp"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -335,8 +335,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    app:boxStrokeColor="#1A3525"
-                    app:hintTextColor="#6B9E7A"
+                    app:boxStrokeColor="@color/status_active_bg"
+                    app:hintTextColor="@color/text_secondary"
                     app:boxBackgroundColor="@android:color/transparent">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -345,7 +345,7 @@
                         android:layout_height="wrap_content"
                         android:hint="رمز الموظف"
                         android:inputType="text"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/text_primary"
                         android:padding="12dp"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -355,8 +355,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    app:boxStrokeColor="#1A3525"
-                    app:hintTextColor="#6B9E7A"
+                    app:boxStrokeColor="@color/status_active_bg"
+                    app:hintTextColor="@color/text_secondary"
                     app:boxBackgroundColor="@android:color/transparent"
                     app:passwordToggleEnabled="true">
 
@@ -366,7 +366,7 @@
                         android:layout_height="wrap_content"
                         android:hint="الرقم السري"
                         android:inputType="numberPassword"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/text_primary"
                         android:padding="12dp"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -376,8 +376,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                    app:boxStrokeColor="#1A3525"
-                    app:hintTextColor="#6B9E7A"
+                    app:boxStrokeColor="@color/status_active_bg"
+                    app:hintTextColor="@color/text_secondary"
                     app:boxBackgroundColor="@android:color/transparent">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -386,7 +386,7 @@
                         android:layout_height="wrap_content"
                         android:hint="رقم الهاتف (07xxxxxxxxx)"
                         android:inputType="phone"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/text_primary"
                         android:padding="12dp"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -395,7 +395,7 @@
                     android:id="@+id/layoutWorkerError"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#2E0000"
+                    android:background="@color/status_locked_bg"
                     android:gravity="center"
                     android:padding="12dp"
                     android:layout_marginBottom="16dp"
@@ -406,7 +406,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:textColor="#FF4444"
+                        android:textColor="@color/status_locked"
                         android:textSize="13sp"/>
                 </LinearLayout>
 
@@ -417,8 +417,8 @@
                     android:text="تسجيل"
                     app:cornerRadius="12dp"
                     style="@style/Widget.Material3.Button.OutlinedButton"
-                    app:strokeColor="#CFFF04"
-                    android:textColor="#CFFF04"/>
+                    app:strokeColor="@color/primary"
+                    android:textColor="@color/status_active"/>
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>

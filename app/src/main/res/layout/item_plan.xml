@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
-    app:cardBackgroundColor="#132B1E"
+    app:cardBackgroundColor="@color/surface"
     app:cardCornerRadius="16dp"
     app:cardElevation="0dp"
     app:strokeWidth="0dp"
@@ -30,7 +30,7 @@
                 android:id="@+id/tvPlanName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_primary"
                 android:textSize="15sp"
                 android:textStyle="bold"/>
 
@@ -38,7 +38,7 @@
                 android:id="@+id/tvPlanDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#6B9E7A"
+                android:textColor="@color/text_secondary"
                 android:textSize="12sp"
                 android:layout_marginTop="2dp"/>
 
@@ -46,36 +46,45 @@
                 android:id="@+id/tvPlanStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#6B9E7A"
+                android:textColor="@color/text_secondary"
                 android:textSize="11sp"
                 android:layout_marginTop="2dp"/>
 
         </LinearLayout>
 
-        <!-- Toggle active -->
-        <Button
-            android:id="@+id/btnTogglePlan"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:textSize="12sp"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            app:strokeColor="#CFFF04"
-            android:textColor="#CFFF04"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:layout_marginEnd="8dp"/>
-
-        <!-- Delete -->
-        <TextView
-            android:id="@+id/btnDeletePlan"
+        <!-- Actions column: toggle above, delete below with 8dp gap -->
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="حذف"
-            android:textColor="#FF4444"
-            android:textSize="13sp"
-            android:padding="8dp"
-            android:clickable="true"
-            android:focusable="true"/>
+            android:orientation="vertical"
+            android:gravity="center_vertical|end">
+
+            <!-- Toggle active -->
+            <Button
+                android:id="@+id/btnTogglePlan"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:textSize="12sp"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                app:strokeColor="@color/primary"
+                android:textColor="@color/status_active"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"/>
+
+            <!-- Delete — small text link below toggle with 8dp gap -->
+            <TextView
+                android:id="@+id/btnDeletePlan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="حذف"
+                android:textColor="@color/status_locked"
+                android:textSize="13sp"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+                android:layout_marginTop="8dp"
+                android:clickable="true"
+                android:focusable="true"/>
+        </LinearLayout>
 
     </LinearLayout>
 

@@ -88,6 +88,16 @@ class PasswordLoginActivity : BaseActivity() {
 
             if (user != null && SecurityManager.verifyPin(pin, user.pin)) {
                 SecurityManager.resetAttempts(selectedUserId!!)
+
+                // Upgrade SHA-256 hash to bcrypt if still using legacy format
+                val newHash = SecurityManager.rehashPin(pin, user.pin)
+                if (newHash != user.pin) {
+                    withContext(Dispatchers.IO) {
+                        val db = AppDatabase.getDatabase(applicationContext)
+                        db.userDao().updateUser(user.copy(pin = newHash))
+                    }
+                }
+
                 vibrate(50)
                 setResult(RESULT_OK)
                 finish()

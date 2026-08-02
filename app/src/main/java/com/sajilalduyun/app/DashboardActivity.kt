@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,6 +25,7 @@ import com.sajilalduyun.app.model.UserRole
 import com.sajilalduyun.app.service.BackupService
 import com.sajilalduyun.app.service.DebtCheckService
 import com.sajilalduyun.app.service.NotificationHelper
+import com.sajilalduyun.app.service.SyncService
 import com.sajilalduyun.app.util.NumberFormatter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -49,6 +51,10 @@ class DashboardActivity : BaseActivity() {
     private lateinit var btnAddDebt: FloatingActionButton
     private lateinit var tvPendingPill: TextView
     private lateinit var btnImport: ImageButton
+    private lateinit var layoutLoading: View
+    private lateinit var layoutError: View
+    private lateinit var tvErrorMessage: TextView
+    private lateinit var btnRetry: com.google.android.material.button.MaterialButton
 
     // Worker views
     private lateinit var layoutWorker: LinearLayout
@@ -127,6 +133,10 @@ class DashboardActivity : BaseActivity() {
         btnAddDebt = findViewById(R.id.btnAddDebt)
         tvPendingPill = findViewById(R.id.tvPendingPill)
         btnImport = findViewById(R.id.btnImport)
+        layoutLoading = findViewById(R.id.layoutLoading)
+        layoutError = findViewById(R.id.layoutError)
+        tvErrorMessage = findViewById(R.id.tvErrorMessage)
+        btnRetry = findViewById(R.id.btnRetry)
 
         // Worker views
         layoutWorker = findViewById(R.id.layoutWorker)
@@ -168,6 +178,19 @@ class DashboardActivity : BaseActivity() {
 
         NotificationHelper.createNotificationChannel(this)
         DebtCheckService.checkAllDebts(this, lifecycleScope)
+
+        // ── Loading/error state ──────────────────────────────────────────────
+        btnRetry.setOnClickListener {
+            layoutError.visibility = View.GONE
+            layoutLoading.visibility = View.VISIBLE
+            SyncService.fullSync(this)
+        }
+
+        // ── Firebase sync (best-effort) ───────────────────────────────────────
+        SyncService.initialize(this)
+        SyncService.onDataChanged = { runOnUiThread { loadDashboard() } }
+        SyncService.startListening(this)
+        SyncService.fullSync(this)
 
         // ── Role-based layout ──────────────────────────────────────────────────
         if (userRole == UserRole.WORKER.name) {
@@ -254,12 +277,50 @@ class DashboardActivity : BaseActivity() {
         loadDashboard()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        SyncService.stopListening()
+        SyncService.onDataChanged = null
+    }
+
     private fun loadDashboard() {
         lifecycleScope.launch {
+            layoutLoading.visibility = View.GONE
+            layoutError.visibility = View.GONE
+
             val db = AppDatabase.getDatabase(applicationContext)
-            val user = db.userDao().getUserById(userId)
-            val allDebts = db.debtDao().getAllDebts()
-            val pendingDebts = db.debtDao().getPendingDebts()
+            val user = try {
+                db.userDao().getUserById(userId)
+            } catch (e: Exception) {
+                runOnUiThread {
+                    layoutLoading.visibility = View.GONE
+                    layoutError.visibility = View.VISIBLE
+                    tvErrorMessage.text = "حدث خطأ في الاتصال، تحقق من الإنترنت"
+                }
+                return@launch
+            }
+
+            val allDebts = try {
+                db.debtDao().getAllDebts()
+            } catch (e: Exception) {
+                runOnUiThread {
+                    layoutLoading.visibility = View.GONE
+                    layoutError.visibility = View.VISIBLE
+                    tvErrorMessage.text = "حدث خطأ في الاتصال، تحقق من الإنترنت"
+                }
+                return@launch
+            }
+
+            val pendingDebts = try {
+                db.debtDao().getPendingDebts()
+            } catch (e: Exception) {
+                runOnUiThread {
+                    layoutLoading.visibility = View.GONE
+                    layoutError.visibility = View.VISIBLE
+                    tvErrorMessage.text = "حدث خطأ في الاتصال، تحقق من الإنترنت"
+                }
+                return@launch
+            }
 
             runOnUiThread {
                 if (userRole == UserRole.OWNER.name) {
@@ -300,10 +361,10 @@ class DashboardActivity : BaseActivity() {
                     updatePendingPill(pendingDebts.size)
 
                 } else {
-                    // Worker
+                    // Worker — only see debts they created
                     tvWelcomeWorker.text = "مرحباً"
                     tvWorkerName.text = user?.name ?: ""
-                    allWorkerDebts = allDebts
+                    allWorkerDebts = allDebts.filter { it.createdByUserId == userId }
                     if (workerDebtAdapter == null) {
                         workerDebtAdapter = GeneralDebtAdapter(allWorkerDebts)
                         rvWorkerDebts.adapter = workerDebtAdapter
@@ -322,7 +383,7 @@ class DashboardActivity : BaseActivity() {
         )
         params.setMargins(0, 0, 12, 0)
         card.layoutParams = params
-        card.setCardBackgroundColor(Color.parseColor("#1C1400"))
+        card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.alert_background))
         card.radius = 12f
         card.cardElevation = 0f
 
@@ -333,12 +394,12 @@ class DashboardActivity : BaseActivity() {
 
         val nameTv = TextView(this)
         nameTv.text = debt.customerName
-        nameTv.setTextColor(Color.WHITE)
+        nameTv.setTextColor(ContextCompat.getColor(this, R.color.text_primary))
         nameTv.textSize = 13f
         nameTv.setTypeface(null, android.graphics.Typeface.BOLD)
 
         val reasonTv = TextView(this)
-        reasonTv.setTextColor(Color.parseColor("#FF8C00"))
+        reasonTv.setTextColor(ContextCompat.getColor(this, R.color.status_pending))
         reasonTv.textSize = 11f
         reasonTv.text = if (debt.planDurationDays > 0) "متأخر +${debt.planDurationDays} يوم" else "تجاوز السقف"
 
@@ -393,15 +454,15 @@ class DashboardActivity : BaseActivity() {
             when (debt.status) {
                 DebtStatus.APPROVED -> {
                     holder.tvStatus.text = "نشط"
-                    holder.tvStatus.setTextColor(Color.parseColor("#CFFF04"))
+                    holder.tvStatus.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.status_active))
                 }
                 DebtStatus.PENDING -> {
                     holder.tvStatus.text = "معلق"
-                    holder.tvStatus.setTextColor(Color.parseColor("#FF8C00"))
+                    holder.tvStatus.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.status_pending))
                 }
                 DebtStatus.LOCKED -> {
                     holder.tvStatus.text = "مقفل"
-                    holder.tvStatus.setTextColor(Color.parseColor("#FF4444"))
+                    holder.tvStatus.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.status_locked))
                 }
             }
 

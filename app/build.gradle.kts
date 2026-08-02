@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.devtools.ksp") version "2.1.0-1.0.29"
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -32,9 +33,11 @@ android {
 
     buildTypes {
         release {
-            optimization {
-                enable = false
-            }
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -70,6 +73,14 @@ dependencies {
     // Material Dialogs
     implementation("com.afollestad.material-dialogs:core:3.3.0")
 
+    // jBCrypt — secure PIN hashing (replaces SHA-256)
+    implementation("org.mindrot:jbcrypt:0.4")
+
     // WorkManager for scheduled tasks
     implementation("androidx.work:work-runtime-ktx:2.9.1")
+
+    // Firebase — free cross-device sync
+    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-auth-ktx")
 }

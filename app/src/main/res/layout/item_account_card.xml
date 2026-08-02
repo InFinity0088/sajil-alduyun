@@ -8,7 +8,7 @@
     android:layout_marginBottom="16dp"
     android:layout_marginEnd="8dp"
     android:layout_marginStart="8dp"
-    app:cardBackgroundColor="#132B1E"
+    app:cardBackgroundColor="@color/surface"
     app:cardCornerRadius="16dp"
     app:cardElevation="0dp"
     app:strokeWidth="0dp">
@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="اسم الحساب"
-            android:textColor="#CFFF04"
+            android:textColor="@color/status_active"
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_marginBottom="8dp"/>
@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="المالك"
-            android:textColor="#6B9E7A"
+            android:textColor="@color/text_secondary"
             android:textSize="14sp"
             android:layout_marginBottom="8dp"/>
 
@@ -46,10 +46,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="نشط"
-            android:textColor="#CFFF04"
+            android:textColor="@color/status_active"
             android:textSize="12sp"
-            android:background="#1A3525"
+            android:background="@color/status_active_bg"
             android:paddingHorizontal="8dp"
             android:paddingVertical="4dp"/>
+
+        <!-- Compact tap hint -->
+        <TextView
+            android:id="@+id/tvTapHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="اضغط للدخول"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            android:layout_marginTop="8dp"/>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

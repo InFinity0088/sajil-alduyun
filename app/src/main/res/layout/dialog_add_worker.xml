@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:text="اسم العامل"
         android:textSize="14sp"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/text_primary"
         android:textStyle="bold"
         android:layout_marginBottom="6dp"/>
 
@@ -23,8 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        app:boxStrokeColor="#1A3525"
-        app:hintTextColor="#6B9E7A"
+        app:boxStrokeColor="@color/status_active_bg"
+        app:hintTextColor="@color/text_secondary"
         app:boxBackgroundColor="@android:color/transparent">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -33,7 +33,7 @@
             android:layout_height="48dp"
             android:hint="مثال: أحمد محمد"
             android:inputType="textPersonName"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_primary"
             android:paddingHorizontal="12dp"
             android:gravity="end|center_vertical"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:text="الرمز السري (4 أرقام)"
         android:textSize="14sp"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/text_primary"
         android:textStyle="bold"
         android:layout_marginBottom="6dp"/>
 
@@ -53,8 +53,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        app:boxStrokeColor="#1A3525"
-        app:hintTextColor="#6B9E7A"
+        app:boxStrokeColor="@color/status_active_bg"
+        app:hintTextColor="@color/text_secondary"
         app:boxBackgroundColor="@android:color/transparent"
         app:passwordToggleEnabled="true">
 
@@ -65,7 +65,7 @@
             android:hint="****"
             android:inputType="numberPassword"
             android:maxLength="4"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_primary"
             android:textSize="18sp"
             android:gravity="center"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -76,7 +76,7 @@
         android:layout_height="wrap_content"
         android:text="تأكيد الرمز السري"
         android:textSize="14sp"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/text_primary"
         android:textStyle="bold"
         android:layout_marginBottom="6dp"/>
 
@@ -85,8 +85,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        app:boxStrokeColor="#1A3525"
-        app:hintTextColor="#6B9E7A"
+        app:boxStrokeColor="@color/status_active_bg"
+        app:hintTextColor="@color/text_secondary"
         app:boxBackgroundColor="@android:color/transparent"
         app:passwordToggleEnabled="true">
 
@@ -97,7 +97,7 @@
             android:hint="****"
             android:inputType="numberPassword"
             android:maxLength="4"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_primary"
             android:textSize="18sp"
             android:gravity="center"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -109,7 +109,7 @@
         android:layout_height="wrap_content"
         android:text=""
         android:textSize="13sp"
-        android:textColor="#FF4444"
+        android:textColor="@color/status_locked"
         android:gravity="center"
         android:visibility="gone"
         android:layout_marginTop="4dp"/>

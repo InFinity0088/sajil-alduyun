@@ -13,8 +13,30 @@
     <color name="text_primary">#FFFFFF</color>
     <color name="text_secondary">#6B9E7A</color>
 
-    <!-- Debt status -->
+    <!-- Debt status text colors -->
     <color name="status_active">#CFFF04</color>
     <color name="status_pending">#FF8C00</color>
     <color name="status_locked">#FF4444</color>
+
+    <!-- Debt status background chips -->
+    <color name="status_active_bg">#1A3525</color>
+    <color name="status_pending_bg">#2E1A00</color>
+    <color name="status_locked_bg">#2E0000</color>
+
+    <!-- History timeline dot colors -->
+    <color name="history_created">#4CAF50</color>
+    <color name="history_increased">#F57C00</color>
+    <color name="history_decreased">#1565C0</color>
+    <color name="history_paid">#1565C0</color>
+    <color name="history_rejected">#D32F2F</color>
+    <color name="history_deleted">#9E9E9E</color>
+    <color name="history_default">#1A237E</color>
+
+    <!-- UI surfaces -->
+    <color name="alert_background">#1C1400</color>
+    <color name="overlay_background">#0D211799</color>
+
+    <!-- Feedback -->
+    <color name="snackbar_background">#132B1E</color>
+    <color name="snackbar_action">#CFFF04</color>
 </resources>

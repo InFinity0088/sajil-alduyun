@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.sajilalduyun.app.database.AppDatabase
 import com.sajilalduyun.app.security.SecurityManager
 import com.sajilalduyun.app.service.LicenseManager
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity() {
@@ -49,8 +50,9 @@ class MainActivity : BaseActivity() {
             return
         }
 
-        // Check license validity every time app opens
-        if (!LicenseManager.isLicenseValid(this)) {
+        // Check license validity every time app opens (owner devices only)
+        val isOwnerDevice = prefs.getBoolean("is_owner_device", true)
+        if (isOwnerDevice && !LicenseManager.isLicenseValid(this)) {
             startActivity(Intent(this, LicenseExpiredActivity::class.java))
             finish()
             return
@@ -164,6 +166,15 @@ class MainActivity : BaseActivity() {
                     SecurityManager.recordFailedAttempt(userId)
                     showError("الرقم السري غير صحيح")
                     return@runOnUiThread
+                }
+
+                // Upgrade SHA-256 hash to bcrypt if still using legacy format
+                lifecycleScope.launch(Dispatchers.IO) {
+                    val newHash = SecurityManager.rehashPin(pin, user.pin)
+                    if (newHash != user.pin) {
+                        val db = AppDatabase.getDatabase(this@MainActivity)
+                        db.userDao().updateUser(user.copy(pin = newHash))
+                    }
                 }
 
                 SecurityManager.resetAttempts(userId)

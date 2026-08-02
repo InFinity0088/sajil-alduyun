@@ -1,5 +1,6 @@
 package com.sajilalduyun.app
 
+import android.graphics.Color
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -7,11 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.sajilalduyun.app.database.AppDatabase
 import com.sajilalduyun.app.model.PaymentPlan
+import com.sajilalduyun.app.service.SyncService
 import com.sajilalduyun.app.ui.MaterialDialogHelper
 import com.sajilalduyun.app.util.NumberFormatter
 import kotlinx.coroutines.Dispatchers
@@ -73,6 +77,7 @@ class PlanManagementActivity : BaseActivity() {
             withContext(Dispatchers.IO) {
                 AppDatabase.getDatabase(applicationContext).planDao().update(updated)
             }
+            SyncService.syncPlan(updated)
             vibrate(50)
             val msg = if (updated.isActive) "تم تفعيل ${plan.name}" else "تم تعطيل ${plan.name}"
             Toast.makeText(this@PlanManagementActivity, msg, Toast.LENGTH_SHORT).show()
@@ -93,10 +98,38 @@ class PlanManagementActivity : BaseActivity() {
             withContext(Dispatchers.IO) {
                 AppDatabase.getDatabase(applicationContext).planDao().deleteById(plan.id)
             }
+            SyncService.deletePlan(plan.id)
             vibrate(50)
-            Toast.makeText(this@PlanManagementActivity, "تم حذف ${plan.name}", Toast.LENGTH_SHORT).show()
+            showDeleteSnackbar("تم حذف ${plan.name}") {
+                undoDeletePlan(plan)
+            }
             loadPlans()
         }
+    }
+
+    private fun undoDeletePlan(plan: PaymentPlan) {
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                AppDatabase.getDatabase(applicationContext).planDao().insert(plan)
+            }
+            SyncService.syncPlan(plan)
+            Toast.makeText(this@PlanManagementActivity, "تم التراجع عن الحذف", Toast.LENGTH_SHORT).show()
+            loadPlans()
+        }
+    }
+
+    private fun showDeleteSnackbar(message: String, onUndo: () -> Unit) {
+        val snackbar = Snackbar.make(
+            findViewById(android.R.id.content),
+            message,
+            Snackbar.LENGTH_LONG
+        )
+        snackbar.view.setBackgroundTintList(
+            ContextCompat.getColorStateList(this, R.color.snackbar_background)
+        )
+        snackbar.setActionTextColor(ContextCompat.getColor(this, R.color.snackbar_action))
+        snackbar.setAction("تراجع") { onUndo() }
+        snackbar.show()
     }
 
     private fun showAddEditPlanDialog(existingPlan: PaymentPlan?) {
@@ -158,6 +191,16 @@ class PlanManagementActivity : BaseActivity() {
             withContext(Dispatchers.IO) {
                 AppDatabase.getDatabase(applicationContext).planDao().insert(plan)
             }
+            // For new plans, Room auto-generates the ID — query it back to sync correctly
+            val planToSync = if (existingPlan != null) {
+                plan // ID already set from existingPlan
+            } else {
+                withContext(Dispatchers.IO) {
+                    AppDatabase.getDatabase(applicationContext).planDao().getAllPlans()
+                        .lastOrNull { it.name == plan.name } ?: plan
+                }
+            }
+            SyncService.syncPlan(planToSync)
             vibrate(50)
             Toast.makeText(
                 this@PlanManagementActivity,
@@ -224,11 +267,11 @@ class PlanAdapter(
 
             if (plan.isActive) {
                 tvStatus.text = "نشط"
-                tvStatus.setTextColor(android.graphics.Color.parseColor("#CFFF04"))
+                tvStatus.setTextColor(ContextCompat.getColor(itemView.context, R.color.status_active))
                 btnToggle.text = "تعطيل"
             } else {
                 tvStatus.text = "غير نشط"
-                tvStatus.setTextColor(android.graphics.Color.parseColor("#FF4444"))
+                tvStatus.setTextColor(ContextCompat.getColor(itemView.context, R.color.status_locked))
                 btnToggle.text = "تفعيل"
             }
 

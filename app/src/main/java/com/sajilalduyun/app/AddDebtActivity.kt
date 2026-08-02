@@ -4,11 +4,10 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.card.MaterialCardView
 import com.sajilalduyun.app.database.AppDatabase
@@ -17,6 +16,7 @@ import com.sajilalduyun.app.model.DebtHistory
 import com.sajilalduyun.app.model.DebtStatus
 import com.sajilalduyun.app.model.PaymentPlan
 import com.sajilalduyun.app.model.UserRole
+import com.sajilalduyun.app.service.SyncService
 import com.sajilalduyun.app.ui.LottieOverlayManager
 import com.sajilalduyun.app.util.NumberFormatter
 import kotlinx.coroutines.Dispatchers
@@ -57,23 +57,6 @@ class AddDebtActivity : BaseActivity() {
         btnBack.setOnClickListener { finish() }
         btnSave.setOnClickListener { saveDebt() }
 
-        // Auto-format amount input with commas as user types
-        etAmount.addTextChangedListener(object : TextWatcher {
-            private var isEditing = false
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable?) {
-                if (isEditing) return
-                isEditing = true
-                val raw = s?.toString()?.filter { it.isDigit() } ?: ""
-                if (raw.isNotEmpty()) {
-                    val formatted = NumberFormatter.formatWithCommas(raw.toLong())
-                    s?.replace(0, s.length, formatted)
-                }
-                isEditing = false
-            }
-        })
-
         // Load plans and populate card dynamically
         lifecycleScope.launch {
             loadPlans()
@@ -91,7 +74,7 @@ class AddDebtActivity : BaseActivity() {
 
         if (cachedPlans.isEmpty()) return
 
-        val limeStroke = android.content.res.ColorStateList.valueOf(Color.parseColor("#CFFF04"))
+        val limeStroke = ContextCompat.getColorStateList(this, R.color.primary)!!
         val transparentStroke = android.content.res.ColorStateList.valueOf(Color.TRANSPARENT)
 
         for (plan in cachedPlans) {
@@ -117,7 +100,7 @@ class AddDebtActivity : BaseActivity() {
             if (isFirst) marginEnd = 8
             else marginStart = 8
         }
-        card.setCardBackgroundColor(Color.parseColor("#132B1E"))
+        card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.surface))
         card.radius = resources.getDimension(com.google.android.material.R.dimen.mtrl_card_corner_radius).toFloat()
         card.cardElevation = 0f
         card.strokeWidth = 0
@@ -151,14 +134,14 @@ class AddDebtActivity : BaseActivity() {
         }
         inner.addView(TextView(this).apply {
             text = capText
-            setTextColor(Color.parseColor("#6B9E7A"))
+            setTextColor(ContextCompat.getColor(this@AddDebtActivity, R.color.text_secondary))
             textSize = 12f
         })
 
         if (plan.durationDays > 0) {
             inner.addView(TextView(this).apply {
                 text = "ينقفل بعد ${plan.durationDays} يوم"
-                setTextColor(Color.parseColor("#6B9E7A"))
+                setTextColor(ContextCompat.getColor(this@AddDebtActivity, R.color.text_secondary))
                 textSize = 11f
             })
         }
@@ -174,7 +157,7 @@ class AddDebtActivity : BaseActivity() {
 
     private fun selectPlan(planId: Long) {
         selectedPlanId = planId
-        val limeStroke = android.content.res.ColorStateList.valueOf(Color.parseColor("#CFFF04"))
+        val limeStroke = ContextCompat.getColorStateList(this, R.color.primary)!!
         val transparentStroke = android.content.res.ColorStateList.valueOf(Color.TRANSPARENT)
 
         for (i in 0 until layoutPlanCards.childCount) {
@@ -292,6 +275,10 @@ class AddDebtActivity : BaseActivity() {
                     db.debtDao().insertDebt(finalDebt)
                     db.debtHistoryDao().insert(creationHistory)
                 }
+
+                // Sync to Firestore
+                SyncService.syncDebt(finalDebt)
+                SyncService.syncDebtHistory(creationHistory)
 
                 runOnUiThread {
                     lottieManager.hideLoading()

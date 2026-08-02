@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0D2117"
+    android:background="@color/background"
     android:layoutDirection="rtl"
     android:orientation="vertical">
 
@@ -24,7 +24,7 @@
             android:src="@drawable/ic_arrow_back"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="رجوع"
-            app:tint="#FFFFFF"
+            app:tint="@color/text_primary"
             android:layout_marginEnd="12dp"/>
 
         <TextView
@@ -32,9 +32,63 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="الطلبات المعلقة"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_primary"
             android:textSize="24sp"
             android:textStyle="bold"/>
+    </LinearLayout>
+
+    <!-- Loading overlay -->
+    <LinearLayout
+        android:id="@+id/layoutLoading"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:indeterminateTint="@color/primary"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="جاري التحميل..."
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp"
+            android:layout_marginTop="16dp"/>
+    </LinearLayout>
+
+    <!-- Error overlay -->
+    <LinearLayout
+        android:id="@+id/layoutError"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvErrorMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="حدث خطأ في الاتصال، تحقق من الإنترنت"
+            android:textColor="@color/status_locked"
+            android:textSize="15sp"
+            android:gravity="center"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRetry"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:text="إعادة المحاولة"
+            android:backgroundTint="@color/primary"
+            android:textColor="@color/primary_on"
+            app:cornerRadius="12dp"
+            android:layout_marginTop="16dp"/>
     </LinearLayout>
 
     <!-- Empty State -->
@@ -52,7 +106,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="ما في طلبات"
-            android:textColor="#CFFF04"
+            android:textColor="@color/status_active"
             android:textSize="18sp"/>
     </LinearLayout>
 

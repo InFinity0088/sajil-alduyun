@@ -154,11 +154,35 @@ object LicenseManager {
         // 6. Activate with the correct duration
         activateLicense(context, durationMs)
 
+        // 7. Save to Firestore for cloud recovery
+        saveToCloud(context, "OWNER_001")
+
         return SetupActivationResult(true, null)
     }
 
-    // ──────────────────────────────────────────────
-    //  Validation
+    /** Save the active license to Firestore so it can be recovered on another device. */
+    fun saveToCloud(context: Context, ownerId: String) {
+        val prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        val startDate = prefs.getLong(KEY_START_DATE, 0L)
+        val durationMs = prefs.getLong(KEY_DURATION_MS, 0L)
+        val deviceId = getDeviceId(context)
+        if (startDate > 0L && durationMs > 0L) {
+            SyncService.syncLicense(ownerId, startDate, durationMs, deviceId)
+        }
+    }
+
+    /**
+     * Restore license from cloud data (used when setting up on a new device
+     * where the owner already has an active license in Firestore).
+     */
+    fun restoreFromCloud(context: Context, startDate: Long, durationMs: Long) {
+        val prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        prefs.edit()
+            .putLong(KEY_START_DATE, startDate)
+            .putLong(KEY_DURATION_MS, durationMs)
+            .putString(KEY_DEVICE_ID, getDeviceId(context))
+            .apply()
+    }
     // ──────────────────────────────────────────────
 
     /** Check if the currently active license is still valid. */

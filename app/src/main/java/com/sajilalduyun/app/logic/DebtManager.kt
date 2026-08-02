@@ -2,6 +2,7 @@ package com.sajilalduyun.app.logic
 
 import com.sajilalduyun.app.model.*
 import java.util.Date
+import java.util.UUID
 import java.util.concurrent.TimeUnit
 
 object DebtManager {
@@ -60,7 +61,7 @@ object DebtManager {
         planDurationDays: Int,
         createdByUser: User
     ): CustomerDebt {
-        val id = "DEBT_${Date().time}"
+        val id = "DEBT_${Date().time}_${UUID.randomUUID().toString().take(8)}"
 
         return CustomerDebt(
             id = id,

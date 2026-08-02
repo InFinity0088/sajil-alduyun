@@ -7,6 +7,7 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.sajilalduyun.app.R
 
 class LottieOverlayManager(private val activity: AppCompatActivity) {
@@ -31,13 +32,13 @@ class LottieOverlayManager(private val activity: AppCompatActivity) {
                 FrameLayout.LayoutParams.MATCH_PARENT
             )
             orientation = LinearLayout.VERTICAL
-            setBackgroundColor(android.graphics.Color.parseColor("#0D211799"))
+            setBackgroundColor(ContextCompat.getColor(activity, R.color.overlay_background))
             gravity = android.view.Gravity.CENTER
             visibility = View.GONE
 
             val textView = TextView(activity).apply {
                 text = "جاري الحفظ..."
-                setTextColor(android.graphics.Color.parseColor("#CFFF04"))
+                setTextColor(ContextCompat.getColor(activity, R.color.primary))
                 textSize = 16f
             }
             addView(textView)
@@ -50,13 +51,13 @@ class LottieOverlayManager(private val activity: AppCompatActivity) {
                 FrameLayout.LayoutParams.MATCH_PARENT
             )
             orientation = LinearLayout.VERTICAL
-            setBackgroundColor(android.graphics.Color.parseColor("#0D211799"))
+            setBackgroundColor(ContextCompat.getColor(activity, R.color.overlay_background))
             gravity = android.view.Gravity.CENTER
             visibility = View.GONE
 
             val textView = TextView(activity).apply {
                 text = "✓ تم الحفظ بنجاح!"
-                setTextColor(android.graphics.Color.parseColor("#CFFF04"))
+                setTextColor(ContextCompat.getColor(activity, R.color.primary))
                 textSize = 18f
             }
             addView(textView)

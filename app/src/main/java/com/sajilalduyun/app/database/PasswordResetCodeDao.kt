@@ -21,6 +21,6 @@ interface PasswordResetCodeDao {
     @Update
     suspend fun update(code: PasswordResetCode)
 
-    @Query("DELETE FROM password_reset_codes WHERE expiresAt < datetime('now')")
-    suspend fun deleteExpiredCodes()
+    @Query("DELETE FROM password_reset_codes WHERE expiresAt < :now")
+    suspend fun deleteExpiredCodes(now: Long = System.currentTimeMillis())
 }

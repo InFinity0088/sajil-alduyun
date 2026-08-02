@@ -282,7 +282,7 @@ object BackupService {
     }
 
     private fun JSONObject.toDebtHistory() = DebtHistory(
-        id = getLong("id"),
+        id = opt("id")?.toString() ?: "",  // handles both String UUID and legacy Long
         debtId = getString("debtId"),
         actionType = getString("actionType"),
         oldAmount = getDouble("oldAmount"),

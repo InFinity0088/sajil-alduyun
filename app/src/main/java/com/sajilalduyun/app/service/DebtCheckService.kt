@@ -4,6 +4,7 @@ import android.content.Context
 import com.sajilalduyun.app.database.AppDatabase
 import com.sajilalduyun.app.logic.DebtManager
 import com.sajilalduyun.app.model.DebtStatus
+import com.sajilalduyun.app.service.SyncService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,6 +29,7 @@ object DebtCheckService {
                     // Update status to LOCKED in database
                     val updatedDebt = debt.copy(status = DebtStatus.LOCKED)
                     db.debtDao().updateDebt(updatedDebt)
+                    SyncService.syncDebt(updatedDebt)
 
                     // Send notification
                     NotificationHelper.sendAlert(
@@ -42,6 +44,7 @@ object DebtCheckService {
                 if (debt.maxLimit > 0.0 && debt.amount > debt.maxLimit) {
                     val updatedDebt = debt.copy(status = DebtStatus.LOCKED)
                     db.debtDao().updateDebt(updatedDebt)
+                    SyncService.syncDebt(updatedDebt)
 
                     NotificationHelper.sendAlert(
                         context,

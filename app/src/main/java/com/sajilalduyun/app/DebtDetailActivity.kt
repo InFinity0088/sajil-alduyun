@@ -1,20 +1,22 @@
 package com.sajilalduyun.app
 
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import com.sajilalduyun.app.database.AppDatabase
 import com.sajilalduyun.app.model.CustomerDebt
 import com.sajilalduyun.app.model.DebtHistory
 import com.sajilalduyun.app.model.DebtStatus
 import com.sajilalduyun.app.model.UserRole
+import com.sajilalduyun.app.service.SyncService
 import com.sajilalduyun.app.ui.MaterialDialogHelper
 import com.sajilalduyun.app.util.NumberFormatter
 import kotlinx.coroutines.Dispatchers
@@ -105,23 +107,6 @@ class DebtDetailActivity : BaseActivity() {
         btnMarkPaid.setOnClickListener { confirmMarkPaid() }
         btnDeleteDebt.setOnClickListener { confirmDelete() }
 
-        // Auto-format amount input with commas as user types
-        etActionAmount.addTextChangedListener(object : TextWatcher {
-            private var isEditing = false
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable?) {
-                if (isEditing) return
-                isEditing = true
-                val raw = s?.toString()?.filter { it.isDigit() } ?: ""
-                if (raw.isNotEmpty()) {
-                    val formatted = NumberFormatter.formatWithCommas(raw.toLong())
-                    s?.replace(0, s.length, formatted)
-                }
-                isEditing = false
-            }
-        })
-
         loadDebt()
     }
 
@@ -162,31 +147,37 @@ class DebtDetailActivity : BaseActivity() {
         when (debt.status) {
             DebtStatus.APPROVED -> {
                 tvDetailStatus.text = "نشط"
-                tvDetailStatus.setTextColor(android.graphics.Color.parseColor("#CFFF04"))
-                tvDetailStatus.setBackgroundColor(android.graphics.Color.parseColor("#1A3525"))
+                tvDetailStatus.setTextColor(ContextCompat.getColor(this, R.color.status_active))
+                tvDetailStatus.setBackgroundColor(ContextCompat.getColor(this, R.color.status_active_bg))
             }
             DebtStatus.PENDING -> {
                 tvDetailStatus.text = "معلق - بانتظار الموافقة"
-                tvDetailStatus.setTextColor(android.graphics.Color.parseColor("#FF8C00"))
-                tvDetailStatus.setBackgroundColor(android.graphics.Color.parseColor("#2E1A00"))
+                tvDetailStatus.setTextColor(ContextCompat.getColor(this, R.color.status_pending))
+                tvDetailStatus.setBackgroundColor(ContextCompat.getColor(this, R.color.status_pending_bg))
             }
             DebtStatus.LOCKED -> {
                 tvDetailStatus.text = "مقفل"
-                tvDetailStatus.setTextColor(android.graphics.Color.parseColor("#FF4444"))
-                tvDetailStatus.setBackgroundColor(android.graphics.Color.parseColor("#2E0000"))
+                tvDetailStatus.setTextColor(ContextCompat.getColor(this, R.color.status_locked))
+                tvDetailStatus.setBackgroundColor(ContextCompat.getColor(this, R.color.status_locked_bg))
             }
         }
 
         // Progress bar
-        val percent = ((debt.amount / debt.maxLimit) * 100).toInt().coerceIn(0, 100)
+        val percent = if (debt.maxLimit > 0.0) {
+            ((debt.amount / debt.maxLimit) * 100).toInt().coerceIn(0, 100)
+        } else 0
         progressLimit.progress = percent
         if (percent >= 80) {
-            progressLimit.progressTintList = android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#FF4444"))
+            progressLimit.progressTintList = ContextCompat.getColorStateList(this, R.color.status_locked)
         } else {
-            progressLimit.progressTintList = android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#CFFF04"))
+            progressLimit.progressTintList = ContextCompat.getColorStateList(this, R.color.primary)
         }
-        val remaining = debt.maxLimit - debt.amount
-        tvLimitLabel.text = "متبقي: ${NumberFormatter.formatWithCommas(remaining.toLong())} من ${NumberFormatter.formatWithCommas(debt.maxLimit.toLong())} د.ع"
+        if (debt.maxLimit > 0.0) {
+            val remaining = debt.maxLimit - debt.amount
+            tvLimitLabel.text = "متبقي: ${NumberFormatter.formatWithCommas(remaining.toLong())} من ${NumberFormatter.formatWithCommas(debt.maxLimit.toLong())} د.ع"
+        } else {
+            tvLimitLabel.text = "بدون سقف"
+        }
 
         tvDetailCreatedAt.text = dateFormat.format(debt.createdAt)
 
@@ -254,12 +245,12 @@ class DebtDetailActivity : BaseActivity() {
 
             // Set dot color based on action type
             val dotColor = when (entry.actionType) {
-                "CREATED", "APPROVED" -> android.graphics.Color.parseColor("#4CAF50")
-                "INCREASED" -> android.graphics.Color.parseColor("#F57C00")
-                "DECREASED", "PAID" -> android.graphics.Color.parseColor("#1565C0")
-                "PAYMENT_REQUEST", "REJECTED" -> android.graphics.Color.parseColor("#D32F2F")
-                "DELETED" -> android.graphics.Color.parseColor("#9E9E9E")
-                else -> android.graphics.Color.parseColor("#1A237E")
+                "CREATED", "APPROVED" -> ContextCompat.getColor(this, R.color.history_created)
+                "INCREASED" -> ContextCompat.getColor(this, R.color.history_increased)
+                "DECREASED", "PAID" -> ContextCompat.getColor(this, R.color.history_paid)
+                "PAYMENT_REQUEST", "REJECTED" -> ContextCompat.getColor(this, R.color.history_rejected)
+                "DELETED" -> ContextCompat.getColor(this, R.color.history_deleted)
+                else -> ContextCompat.getColor(this, R.color.history_default)
             }
             dot.backgroundTintList = android.content.res.ColorStateList.valueOf(dotColor)
 
@@ -356,6 +347,10 @@ class DebtDetailActivity : BaseActivity() {
                 db.debtHistoryDao().getHistoryForDebt(debtId)
             }
 
+            // Sync to Firestore
+            SyncService.syncDebt(updatedDebt)
+            SyncService.syncDebtHistory(historyEntry)
+
             currentDebt = updatedDebt
 
             runOnUiThread {
@@ -405,6 +400,9 @@ class DebtDetailActivity : BaseActivity() {
                     db.debtHistoryDao().insert(historyEntry)
                     db.debtDao().deleteDebt(debt)
                 }
+                // Sync to Firestore
+                SyncService.syncDebtHistory(historyEntry)
+                SyncService.deleteDebt(debt.id)
                 runOnUiThread {
                     vibrate(50)
                     Toast.makeText(this@DebtDetailActivity, "تم تسديد الحساب وحذفه ✓", Toast.LENGTH_SHORT).show()
@@ -428,6 +426,9 @@ class DebtDetailActivity : BaseActivity() {
                     db.debtHistoryDao().insert(historyEntry)
                     db.debtDao().updateDebt(paymentRequest)
                 }
+                // Sync to Firestore
+                SyncService.syncDebt(paymentRequest)
+                SyncService.syncDebtHistory(historyEntry)
                 runOnUiThread {
                     vibrate(50)
                     Toast.makeText(this@DebtDetailActivity, "تم إرسال طلب التسديد للمراجعة ✓", Toast.LENGTH_SHORT).show()
@@ -461,11 +462,44 @@ class DebtDetailActivity : BaseActivity() {
                 db.debtHistoryDao().insert(historyEntry)
                 db.debtDao().deleteDebt(debt)
             }
+            // Sync to Firestore
+            SyncService.syncDebtHistory(historyEntry)
+            SyncService.deleteDebt(debt.id)
             runOnUiThread {
                 vibrate(50)
-                Toast.makeText(this@DebtDetailActivity, "تم حذف الدين", Toast.LENGTH_SHORT).show()
-                finish()
+                val deletedDebt = debt
+                val snackbar = Snackbar.make(
+                    findViewById(android.R.id.content),
+                    "تم حذف الدين",
+                    Snackbar.LENGTH_LONG
+                )
+                snackbar.view.setBackgroundTintList(
+                    ContextCompat.getColorStateList(this@DebtDetailActivity, R.color.snackbar_background)
+                )
+                snackbar.setActionTextColor(ContextCompat.getColor(this@DebtDetailActivity, R.color.snackbar_action))
+                snackbar.setAction("تراجع") { undoDeleteDebt(deletedDebt) }
+                snackbar.addCallback(object : Snackbar.Callback() {
+                    override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                        super.onDismissed(transientBottomBar, event)
+                        if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                            finish()
+                        }
+                    }
+                })
+                snackbar.show()
             }
+        }
+    }
+
+    private fun undoDeleteDebt(debt: CustomerDebt) {
+        lifecycleScope.launch {
+            val db = AppDatabase.getDatabase(applicationContext)
+            withContext(Dispatchers.IO) {
+                db.debtDao().insertDebt(debt)
+            }
+            SyncService.syncDebt(debt)
+            Toast.makeText(this@DebtDetailActivity, "تم التراجع عن الحذف", Toast.LENGTH_SHORT).show()
+            loadDebt()
         }
     }
 

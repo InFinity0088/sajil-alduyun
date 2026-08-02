@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layoutDirection="rtl"
     android:layout_marginBottom="10dp"
-    app:cardBackgroundColor="#132B1E"
+    app:cardBackgroundColor="@color/surface"
     app:cardCornerRadius="20dp"
     app:cardElevation="0dp"
     app:strokeWidth="0dp">
@@ -37,14 +37,14 @@
                     android:layout_width="8dp"
                     android:layout_height="8dp"
                     android:background="@drawable/bg_indicator"
-                    android:backgroundTint="#CFFF04"/>
+                    android:backgroundTint="@color/primary"/>
 
                 <TextView
                     android:id="@+id/tvWorkerStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="نشط"
-                    android:textColor="#CFFF04"
+                    android:textColor="@color/status_active"
                     android:textSize="12sp"
                     android:layout_marginTop="4dp"/>
             </LinearLayout>
@@ -55,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="اسم العامل"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_primary"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:layout_alignParentEnd="true"
@@ -70,7 +70,7 @@
             android:gravity="center_vertical|end"
             android:layout_marginTop="12dp"
             android:background="@drawable/bg_pill"
-            android:backgroundTint="#0D2117"
+            android:backgroundTint="@color/background"
             android:paddingHorizontal="12dp"
             android:paddingVertical="8dp">
 
@@ -81,7 +81,7 @@
                 android:src="@drawable/ic_copy"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="نسخ الرمز"
-                app:tint="#6B9E7A"
+                app:tint="@color/text_secondary"
                 android:layout_marginStart="8dp"/>
 
             <TextView
@@ -89,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="رمز الدخول:"
-                android:textColor="#6B9E7A"
+                android:textColor="@color/text_secondary"
                 android:textSize="12sp"
                 android:layout_marginEnd="8dp"/>
 
@@ -98,7 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="W-0000"
-                android:textColor="#CFFF04"
+                android:textColor="@color/status_active"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:fontFamily="monospace"/>
@@ -117,7 +117,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="حذف"
-                android:textColor="#FF4444"
+                android:textColor="@color/status_locked"
                 android:textSize="13sp"
                 android:clickable="true"
                 android:focusable="true"
@@ -132,8 +132,8 @@
                 android:textSize="12sp"
                 android:paddingHorizontal="12dp"
                 style="@style/Widget.Material3.Button.OutlinedButton"
-                app:strokeColor="#CFFF04"
-                android:textColor="#CFFF04"
+                app:strokeColor="@color/primary"
+                android:textColor="@color/status_active"
                 app:cornerRadius="8dp"/>
         </LinearLayout>
     </LinearLayout>

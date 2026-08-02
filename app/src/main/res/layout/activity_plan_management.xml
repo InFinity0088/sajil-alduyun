@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#0D2117"
+    android:background="@color/background"
     android:layoutDirection="rtl">
 
     <!-- Top bar -->
@@ -24,14 +24,14 @@
             android:src="@drawable/ic_arrow_back"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="رجوع"
-            app:tint="#FFFFFF"
+            app:tint="@color/text_primary"
             android:layout_marginEnd="12dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="إدارة الخطط"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_primary"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginEnd="8dp"/>
@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:textColor="#CFFF04"
+            android:textColor="@color/status_active"
             android:textSize="13sp"/>
 
     </LinearLayout>
@@ -52,7 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="لا توجد خطط بعد\nأضف خطة جديدة بالضغط على +"
-        android:textColor="#6B9E7A"
+        android:textColor="@color/text_secondary"
         android:textSize="16sp"
         android:gravity="center"
         android:layout_marginTop="80dp"
@@ -77,8 +77,8 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="24dp"
         android:src="@drawable/ic_add"
-        app:tint="#0D2117"
-        app:backgroundTint="#CFFF04"
+        app:tint="@color/primary_on"
+        app:backgroundTint="@color/primary"
         app:fabSize="normal"/>
 
 </LinearLayout>

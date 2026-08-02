@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
     android:layoutDirection="rtl"
-    app:cardBackgroundColor="#132B1E"
+    app:cardBackgroundColor="@color/surface"
     app:cardCornerRadius="20dp"
     app:cardElevation="0dp"
     app:strokeWidth="0dp">
@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:textColor="#6B9E7A"
+            android:textColor="@color/text_secondary"
             android:textSize="12sp"/>
 
         <!-- Customer name -->
@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="اسم الزبون"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_primary"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginTop="4dp"/>
@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0 د.ع"
-            android:textColor="#CFFF04"
+            android:textColor="@color/status_active"
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_marginTop="8dp"/>
@@ -71,8 +71,8 @@
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:text="✓ قبول"
-                android:backgroundTint="#CFFF04"
-                android:textColor="#0D2117"
+                android:backgroundTint="@color/primary"
+                android:textColor="@color/primary_on"
                 android:textSize="14sp"
                 app:cornerRadius="10dp"/>
 
@@ -89,8 +89,8 @@
                 android:textSize="14sp"
                 app:cornerRadius="10dp"
                 style="@style/Widget.Material3.Button.OutlinedButton"
-                app:strokeColor="#6B9E7A"
-                android:textColor="#6B9E7A"/>
+                app:strokeColor="@color/text_secondary"
+                android:textColor="@color/text_secondary"/>
         </LinearLayout>
 
     </LinearLayout>
