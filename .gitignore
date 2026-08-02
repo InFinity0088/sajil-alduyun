@@ -14,3 +14,8 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# ── Local-only tools & secrets — never commit ──────────────
+/.claude/settings.local.json
+/_tasks/
+/app/google-services.json
